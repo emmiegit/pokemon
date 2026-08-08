@@ -1,16 +1,16 @@
-from typing import Any, NamedTuple
+from typing import Any, TypedDict, cast
 
 import requests
 
 API_ENDPOINT = "https://pokeapi.co/api/v2"
 
 
-class SpecReference(NamedTuple):
+class SpecReference(TypedDict):
     name: str
     url: str
 
 
-class MetaMoveInfo(NamedTuple):
+class MetaMoveInfo(TypedDict):
     category: SpecReference
     ailment: SpecReference
     ailment_chance: int
@@ -25,7 +25,7 @@ class MetaMoveInfo(NamedTuple):
     stat_chance: int
 
 
-class MoveInfo(NamedTuple):
+class MoveInfo(TypedDict):
     id: int
     power: int
     accuracy: int
@@ -54,4 +54,5 @@ def fetch_all_moves(generation: int) -> list[SpecReference]:
 
 
 def fetch_move_info(url: str) -> MoveInfo:
-    return pokeapi_request(url)
+    data = pokeapi_request(url)
+    return cast(MoveInfo, data)
