@@ -39,6 +39,7 @@ class MoveInfo(TypedDict):
     meta: MetaMoveInfo | None
     damage_class: SpecReference
     type: SpecReference
+    target: SpecReference
 
 
 def pokeapi_request(path: str) -> dict[str, Any]:

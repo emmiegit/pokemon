@@ -5,6 +5,19 @@ from typing import NamedTuple
 from .api import MoveInfo, fetch_all_moves, fetch_move_info
 from .crit import get_crit_chance
 
+TARGET_TYPE_OPPONENT = frozenset(
+    {
+        "specific-move",
+        "opponents-field",
+        "random-opponent",
+        "all-other-pokemon",
+        "selected-pokemon",
+        "all-opponents",
+        "entire-field",
+        "all-pokemon",
+    }
+)
+
 MoveDamageByType = dict[str, dict[str, float]]
 
 logger = logging.getLogger(__name__)
@@ -25,12 +38,14 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
         logger.debug("Skipping move, no metadata")
         return None
 
-    # Skip status moves
+    if move["target"]["name"] not in TARGET_TYPE_OPPONENT:
+        logger.debug("Skipping move, doesn't target opponents")
+        return None
+
     if power is None:
         logger.debug("Skipping move, status only")
         return None
 
-    # Skip moves less than 50 BP
     if power < 50:
         logger.debug("Skipping move, BP %d < 50", power)
         return None
