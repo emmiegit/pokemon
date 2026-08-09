@@ -12,7 +12,7 @@ API_CACHE_DIRECTORY = "cached_requests"
 logger = logging.getLogger(__name__)
 
 
-class SpecReference(TypedDict):
+class NamelessSpecReference(TypedDict):
     url: str
 
 
