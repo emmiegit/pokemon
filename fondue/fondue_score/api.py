@@ -60,7 +60,7 @@ class MoveInfo(TypedDict):
     pp: int
     priority: int
     effect_change: int
-    machines: list[MoveMachineSpec],
+    machines: list[MoveMachineSpec]
     meta: MetaMoveInfo | None
     damage_class: SpecReference
     type: SpecReference
