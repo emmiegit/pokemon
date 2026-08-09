@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 
+from .api import fetch_version_group
 from .move import calculate_damage_by_type, compile_moves_by_type
 
 if __name__ == "__main__":

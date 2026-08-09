@@ -21,6 +21,17 @@ class SpecReference(TypedDict):
     url: str
 
 
+class VersionGroupInfo(TypedDict):
+    generation: SpecReference
+    id: int
+    move_learn_methods: list[SpecReference]
+    name: str
+    order: int
+    pokedexes: list[SpecReference]
+    regions: list[SpecReference]
+    versions: list[SpecReference]
+
+
 class MoveMachineSpec(TypedDict):
     machine: NamelessSpecReference
     version_group: SpecReference
@@ -98,6 +109,25 @@ def pokeapi_request(path: str) -> dict[str, Any]:
     data = r.json()
     _cache_store(cache_path, data)
     return data
+
+
+def _map_version_group_name(value: str) -> str:
+    # Common or abbreviated names for convenience
+    # Add items here as needed
+    match value:
+        case "hgss" | "heartgold" | "soulsilver":
+            return "heartgold-soulsilver"
+        case "plat":
+            return "platinum"
+        case _:
+            return value
+
+
+def fetch_version_group(version_group: str) -> VersionGroupInfo:
+    logger.info("Fetching version group information for '%s'", version_group)
+    version_group = _map_version_group_name(version_group)
+    data = pokeapi_request(f"version-group/{version_group}")
+    return cast(VersionGroupInfo, data)
 
 
 def fetch_all_moves(generation: int) -> list[SpecReference]:
