@@ -2,7 +2,7 @@ import argparse
 import logging
 import sys
 
-from .api import fetch_game_info
+from .game import get_game_info
 from .move import calculate_damage_by_type, compile_moves_by_type
 
 if __name__ == "__main__":
@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     # Fetch results
     logger.debug("Fetching game / verison group information")
-    game = fetch_game_info(args.game)
+    game = get_game_info(args.game)
     logger.info("Calculating damage for all moves in %s", game)
     moves_by_type = calculate_damage_by_type(game)
     stats = compile_moves_by_type(moves_by_type)

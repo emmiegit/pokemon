@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from typing import Any, NamedTuple, TypedDict, cast
+from typing import Any, TypedDict, cast
 
 import requests
 
@@ -67,14 +67,6 @@ class MoveInfo(TypedDict):
     target: SpecReference
 
 
-class GameInfo(NamedTuple):
-    generation: int
-    version_group: str
-
-    def __str__(self) -> str:
-        return f"generation {self.generation} (game '{self.version_group}')"
-
-
 def _cache_path(request_path: str) -> str:
     request_path = request_path.strip("/")
     file_name = request_path.replace("/", ".") + ".json"
@@ -119,52 +111,9 @@ def pokeapi_request(path: str) -> dict[str, Any]:
     return data
 
 
-def _map_version_group_name(value: str) -> str:
-    # Common or abbreviated names for convenience
-    # Add items here as needed
-    match value:
-        case "hgss" | "heartgold" | "soulsilver":
-            return "heartgold-soulsilver"
-        case "plat":
-            return "platinum"
-        case _:
-            return value
-
-
-def _map_generation(value: str) -> int:
-    # Avoid a request just for a number
-    match value:
-        case "generation-i":
-            return 1
-        case "generation-ii":
-            return 2
-        case "generation-iii":
-            return 3
-        case "generation-iv":
-            return 4
-        case "generation-v":
-            return 5
-        case "generation-vi":
-            return 6
-        case "generation-vii":
-            return 7
-        case "generation-viii":
-            return 8
-        case "generation-ix":
-            return 9
-        case _:
-            raise ValueError(value)
-
-
-def fetch_game_info(version_group: str) -> GameInfo:
-    logger.info("Fetching version group information for '%s'", version_group)
-    version_group = _map_version_group_name(version_group)
-    data = cast(VersionGroupInfo, pokeapi_request(f"version-group/{version_group}"))
-    generation = _map_generation(data["generation"]["name"])
-    return GameInfo(
-        generation=generation,
-        version_group=data["name"],
-    )
+def fetch_version_group(version_group: str) -> VersionGroupInfo:
+    data = pokeapi_request(f"version-group/{version_group}")
+    return cast(VersionGroupInfo, data)
 
 
 def fetch_all_moves(generation: int) -> list[SpecReference]:
