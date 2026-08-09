@@ -65,8 +65,9 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
     damage *= 1.0 + crit_chance
 
     # Evaluate multi-hit moves
-    average_hits = (meta["max_hits"] - meta["min_hits"]) / 2
-    damage *= average_hits
+    if meta["min_hits"] is not None and meta["max_hits"] is not None:
+        average_hits = (meta["max_hits"] - meta["min_hits"]) / 2
+        damage *= average_hits
 
     # TODO remaining modifications
     is_priority = move["priority"] > 0  # TODO what about negative prio
