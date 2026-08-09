@@ -55,6 +55,7 @@ def _cache_store(file_path: str, data: dict[str, Any]) -> None:
     if not API_CACHE:
         return
 
+    logger.debug("Storing request data to cache file %s", file_path)
     with open(file_path, "w") as file:
         json.dump(data, file)
 
@@ -63,6 +64,7 @@ def _cache_load(file_path: str) -> dict[str, Any]:
     if not API_CACHE:
         raise RuntimeError("API caching is not enabled")
 
+    logger.debug("Loading request data from cache file %s", file_path)
     with open(file_path) as file:
         return json.load(file)
 
