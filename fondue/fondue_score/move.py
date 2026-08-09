@@ -1,10 +1,13 @@
 from collections import defaultdict
+import logging
 from typing import NamedTuple
 
 from .api import MoveInfo, fetch_all_moves, fetch_move_info
 from .crit import get_crit_chance
 
 MoveDamageByType = dict[str, dict[str, float]]
+
+logger = logging.getLogger(__name__)
 
 
 class MoveStatsForType(NamedTuple):
@@ -14,14 +17,17 @@ class MoveStatsForType(NamedTuple):
 
 
 def calculate_damage(generation: int, move: MoveInfo) -> float | None:
+    logger.debug("Calculating damage for move %s (ID %d)", move["name"], move["id"])
     power = move["power"]
 
     # Skip status moves
     if power is None:
+        logger.trace("Skipping move, status only")
         return None
 
     # Skip moves less than 50 BP
     if power < 50:
+        logger.trace("Skipping move, BP %d < 50", power)
         return None
 
     crit_chance = get_crit_chance(generation, move["meta"]["crit_rate"])
@@ -49,6 +55,7 @@ def calculate_damage_by_type(generation: int) -> MoveDamageByType:
 
 def compile_moves_by_type(generation: int) -> list[MoveStatsForType]:
     moves_by_type = calculate_damage_by_type(generation)
+    logger.debug("Organizing types by total damage from moves...")
     stats_by_type = [
         MoveStatsForType(
             type=move_type,

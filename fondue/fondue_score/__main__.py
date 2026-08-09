@@ -1,5 +1,5 @@
 import argparse
-import logger
+import logging
 import sys
 
 from .move import compile_moves_by_type
@@ -33,8 +33,8 @@ if __name__ == "__main__":
     args = argparser.parse_args()
 
     # Set up logger (if enabled)
+    logger = logging.getLogger(__package__)
     if args.verbose > 0:
-        logger = logger.getLogger(__package__)
         logger.setLevel(get_log_level(args.verbose))
         log_handler = logging.StreamHandler(sys.stdout)
         log_formatter = logging.Formatter("[%(levelname)s] %(message)s")
@@ -42,6 +42,7 @@ if __name__ == "__main__":
         logger.addHandler(log_handler)
 
     # Fetch results
+    logger.info("Calculating damage for all moves in generation %d", args.generation)
     stats = compile_moves_by_type(args.generation)
 
     # Display the results in a nice way
