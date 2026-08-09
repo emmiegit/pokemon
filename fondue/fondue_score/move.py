@@ -38,6 +38,10 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
     # Calculate amortized damage
     damage = power
 
+    # Factor in accuracy
+    accuracy = move["accuracy"]
+    damage *= accuracy / 100
+
     # Critical hit chance and damage
     crit_chance = get_crit_chance(generation, move["meta"]["crit_rate"])
     damage *= 1.0 + crit_chance
