@@ -19,6 +19,7 @@ class SpecReference(TypedDict):
 
 class MetaMoveInfo(TypedDict):
     category: SpecReference
+    damage_class: SpecReference
     ailment: SpecReference
     ailment_chance: int
     crit_rate: int
