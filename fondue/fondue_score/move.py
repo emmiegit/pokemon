@@ -43,6 +43,8 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
         logger.debug("Skipping move, doesn't target opponents")
         return None
 
+    # TODO exclude HMs
+
     if power is None:
         logger.debug("Skipping move, status only")
         return None
