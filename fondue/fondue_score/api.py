@@ -56,6 +56,7 @@ def _cache_store(file_path: str, data: dict[str, Any]) -> None:
         return
 
     logger.debug("Storing request data to cache file %s", file_path)
+    os.makedirs(API_CACHE_DIRECTORY, exist_ok=True)
     with open(file_path, "w") as file:
         json.dump(data, file)
 
