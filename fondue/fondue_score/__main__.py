@@ -10,6 +10,7 @@ if __name__ == "__main__":
     argparser.add_argument(
         "-v",
         "--verbose",
+        default=0,
         action="count",
         help="Enable logging for scorer execution",
     )
