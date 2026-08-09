@@ -50,8 +50,11 @@ def pokeapi_request(path: str) -> dict[str, Any]:
 
 
 def fetch_all_moves(generation: int) -> list[SpecReference]:
-    data = pokeapi_request(f"generation/{generation}")
-    return data["moves"]
+    moves = []
+    for gen in range(1, generation + 1):
+        data = pokeapi_request(f"generation/{generation}")
+        moves.extend(data["moves"])
+    return moves
 
 
 def fetch_move_info(url: str) -> MoveInfo:
