@@ -13,8 +13,17 @@ logger = logging.getLogger(__name__)
 
 
 class SpecReference(TypedDict):
+    url: str
+
+
+class SpecReference(TypedDict):
     name: str
     url: str
+
+
+class MoveMachineSpec(TypedDict):
+    machine: NamelessSpecReference
+    version_group: SpecReference
 
 
 class MetaMoveInfo(TypedDict):
@@ -40,6 +49,7 @@ class MoveInfo(TypedDict):
     pp: int
     priority: int
     effect_change: int
+    machines: list[MoveMachineSpec],
     meta: MetaMoveInfo | None
     damage_class: SpecReference
     type: SpecReference
