@@ -47,7 +47,7 @@ class MoveInfo(TypedDict):
 
 
 def _cache_path(request_path: str) -> str:
-    file_name = request_path.replace("/", ".")
+    file_name = request_path.replace("/", ".") + ".json"
     return os.path.join(API_CACHE_DIRECTORY, file_name)
 
 
