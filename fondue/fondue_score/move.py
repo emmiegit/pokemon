@@ -84,6 +84,9 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
     crit_chance = get_crit_chance(game.generation, meta["crit_rate"])
     damage *= 1.0 + crit_chance
 
+    # Flinch chance
+    # TODO
+
     # Evaluate multi-hit moves
     if meta["min_hits"] is not None and meta["max_hits"] is not None:
         average_hits = (meta["min_hits"] + meta["max_hits"]) / 2
