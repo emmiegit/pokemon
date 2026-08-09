@@ -51,7 +51,7 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
         return None
 
     # Calculate amortized damage
-    damage = power
+    damage = float(power)
 
     # Factor in accuracy
     accuracy = move["accuracy"]
