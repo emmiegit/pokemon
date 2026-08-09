@@ -30,7 +30,7 @@ class MoveStatsForType(NamedTuple):
     move_count: int
 
 
-def calculate_damage(game: GameInfo, move: MoveInfo) -> float | None:
+def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
     logger.info("Calculating damage for move %s (ID %d)", move["name"], move["id"])
     meta = move["meta"]
     power = move["power"]
@@ -85,7 +85,7 @@ def calculate_damage_by_type(game: GameInfo) -> MoveDamageByType:
         move = fetch_move_info(move_spec["url"])
         move_name = move["name"]
         move_type = move["type"]["name"]
-        damage = calculate_damage(game, move)
+        damage = calculate_damage(move, game)
         if damage is None:
             # Exclude from list
             continue
