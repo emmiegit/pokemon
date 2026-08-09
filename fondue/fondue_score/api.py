@@ -57,9 +57,9 @@ def pokeapi_request(path: str) -> dict[str, Any]:
 def fetch_all_moves(generation: int) -> list[SpecReference]:
     logger.info("Fetching all moves for generation %d", generation)
     moves = []
-    for generation in range(1, generation + 1):
-        logger.debug("Fetching generation %d moves...", generation)
-        data = pokeapi_request(f"generation/{generation}")
+    for current_gen in range(1, generation + 1):
+        logger.debug("Fetching generation %d moves...", current_gen)
+        data = pokeapi_request(f"generation/{current_gen}")
         moves.extend(data["moves"])
     return moves
 

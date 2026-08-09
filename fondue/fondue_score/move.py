@@ -1,5 +1,5 @@
-from collections import defaultdict
 import logging
+from collections import defaultdict
 from typing import NamedTuple
 
 from .api import MoveInfo, fetch_all_moves, fetch_move_info
@@ -65,6 +65,7 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
 
     # TODO remaining modifications
     is_priority = move["priority"] > 0  # TODO what about negative prio
+    _ = is_priority
 
     return damage
 

@@ -4,7 +4,6 @@ import sys
 
 from .move import compile_moves_by_type
 
-
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser("Fondue Scorer")
     argparser.add_argument(
