@@ -40,7 +40,9 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
 
     # Factor in accuracy
     accuracy = move["accuracy"]
-    damage *= accuracy / 100
+    if accuracy is not None:
+        # None means 'always hits'
+        damage *= accuracy / 100
 
     # Critical hit chance and damage
     crit_chance = get_crit_chance(generation, move["meta"]["crit_rate"])

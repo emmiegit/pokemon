@@ -32,7 +32,7 @@ class MoveInfo(TypedDict):
     id: int
     name: str
     power: int | None
-    accuracy: int
+    accuracy: int | None
     pp: int
     priority: int
     effect_change: int
