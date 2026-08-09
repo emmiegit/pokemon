@@ -37,6 +37,13 @@ class MoveMachineSpec(TypedDict):
     version_group: SpecReference
 
 
+class MachineInfo(TypedDict):
+    id: int
+    item: SpecReference
+    move: SpecReference
+    version_group: SpecReference
+
+
 class MetaMoveInfo(TypedDict):
     category: SpecReference
     ailment: SpecReference
@@ -114,6 +121,12 @@ def pokeapi_request(path: str) -> dict[str, Any]:
 def fetch_version_group(version_group: str) -> VersionGroupInfo:
     data = pokeapi_request(f"version-group/{version_group}")
     return cast(VersionGroupInfo, data)
+
+
+def fetch_machine(url: str) -> MachineInfo:
+    assert "/machine/" in url
+    data = pokeapi_request(url)
+    return cast(MachineInfo, data)
 
 
 def fetch_all_moves(generation: int) -> list[SpecReference]:

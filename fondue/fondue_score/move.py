@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from typing import NamedTuple
 
-from .api import MoveInfo, fetch_all_moves, fetch_move_info
+from .api import MoveInfo, fetch_all_moves, fetch_machine, fetch_move_info
 from .crit import get_crit_chance
 from .game import GameInfo
 
@@ -30,6 +30,19 @@ class MoveStatsForType(NamedTuple):
     move_count: int
 
 
+def move_is_hm(move: MoveInfo, game: GameInfo) -> bool:
+    for machine in move["machines"]:
+        if machine["version_group"]["name"] != game.version_group:
+            # not applicable
+            continue
+
+        machine_info = fetch_machine(machine["machine"]["url"])
+        if machine_info["item"]["name"].startswith("hm"):
+            return True
+
+    return False
+
+
 def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
     logger.info("Calculating damage for move %s (ID %d)", move["name"], move["id"])
     meta = move["meta"]
@@ -44,7 +57,9 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
         logger.debug("Skipping move, doesn't target opponents")
         return None
 
-    # TODO exclude HMs
+    if move_is_hm(move, game):
+        logger.debug("Skipping move, is HM")
+        return None
 
     if power is None:
         logger.debug("Skipping move, status only")
