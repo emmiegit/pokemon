@@ -45,6 +45,7 @@ class MoveInfo(TypedDict):
 def pokeapi_request(path: str) -> dict[str, Any]:
     if path.startswith(API_ENDPOINT):
         url = path
+        path = url.removeprefix(API_ENDPOINT)
     else:
         url = f"{API_ENDPOINT}/{path}"
 
