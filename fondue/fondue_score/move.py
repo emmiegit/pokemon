@@ -89,9 +89,13 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
         average_hits = (meta["min_hits"] + meta["max_hits"]) / 2
         damage *= average_hits
 
-    # TODO remaining modifications
-    is_priority = move["priority"] > 0  # TODO what about negative prio
-    _ = is_priority
+    # Move priority
+    if move["priority"] > 0:
+        # Priority moves get a 50% bonus
+        damage *= 1.5
+    elif move["priority"] < 0:
+        # Negative priority gets a 25% penalty
+        damage *= 0.75
 
     return damage
 
