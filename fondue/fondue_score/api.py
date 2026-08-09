@@ -36,7 +36,7 @@ class MoveInfo(TypedDict):
     pp: int
     priority: int
     effect_change: int
-    meta: MetaMoveInfo
+    meta: MetaMoveInfo | None
     damage_class: SpecReference
     type: SpecReference
 

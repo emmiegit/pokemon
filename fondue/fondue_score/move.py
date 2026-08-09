@@ -20,6 +20,11 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
     logger.debug("Calculating damage for move %s (ID %d)", move["name"], move["id"])
     power = move["power"]
 
+    # Not valid for our purposes
+    if move["meta"] is None:
+        logger.debug("Skipping move, no metadata")
+        return None
+
     # Skip status moves
     if power is None:
         logger.debug("Skipping move, status only")
