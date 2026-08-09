@@ -85,8 +85,7 @@ def calculate_damage_by_type(generation: int) -> MoveDamageByType:
     return moves_by_type
 
 
-def compile_moves_by_type(generation: int) -> list[MoveStatsForType]:
-    moves_by_type = calculate_damage_by_type(generation)
+def compile_moves_by_type(moves_by_type: MoveDamageByType) -> list[MoveStatsForType]:
     logger.debug("Organizing types by total damage from moves...")
     stats_by_type = [
         MoveStatsForType(

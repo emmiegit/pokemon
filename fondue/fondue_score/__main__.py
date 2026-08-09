@@ -2,7 +2,7 @@ import argparse
 import logging
 import sys
 
-from .move import compile_moves_by_type
+from .move import calculate_damage_by_type, compile_moves_by_type
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser("Fondue Scorer")
@@ -32,7 +32,8 @@ if __name__ == "__main__":
 
     # Fetch results
     logger.info("Calculating damage for all moves in generation %d", args.generation)
-    stats = compile_moves_by_type(args.generation)
+    moves_by_type = calculate_damage_by_type(args.generation)
+    stats = compile_moves_by_type(moves_by_type)
 
     # Display the results in a nice way
     max_type_name_length = max(len(stat.type) for stat in stats)
