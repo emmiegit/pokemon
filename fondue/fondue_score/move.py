@@ -4,6 +4,7 @@ from typing import NamedTuple
 
 from .api import MoveInfo, fetch_all_moves, fetch_move_info
 from .crit import get_crit_chance
+from .game import GameInfo
 
 TARGET_TYPE_OPPONENT = frozenset(
     {
@@ -29,7 +30,7 @@ class MoveStatsForType(NamedTuple):
     move_count: int
 
 
-def calculate_damage(generation: int, move: MoveInfo) -> float | None:
+def calculate_damage(game: GameInfo, move: MoveInfo) -> float | None:
     logger.info("Calculating damage for move %s (ID %d)", move["name"], move["id"])
     meta = move["meta"]
     power = move["power"]
@@ -63,7 +64,7 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
         damage *= accuracy / 100
 
     # Critical hit chance and damage
-    crit_chance = get_crit_chance(generation, meta["crit_rate"])
+    crit_chance = get_crit_chance(game.generation, meta["crit_rate"])
     damage *= 1.0 + crit_chance
 
     # Evaluate multi-hit moves
@@ -78,13 +79,13 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
     return damage
 
 
-def calculate_damage_by_type(generation: int) -> MoveDamageByType:
+def calculate_damage_by_type(game: GameInfo) -> MoveDamageByType:
     moves_by_type: MoveDamageByType = defaultdict(dict)
-    for move_spec in fetch_all_moves(generation):
+    for move_spec in fetch_all_moves(game.generation):
         move = fetch_move_info(move_spec["url"])
         move_name = move["name"]
         move_type = move["type"]["name"]
-        damage = calculate_damage(generation, move)
+        damage = calculate_damage(game, move)
         if damage is None:
             # Exclude from list
             continue
