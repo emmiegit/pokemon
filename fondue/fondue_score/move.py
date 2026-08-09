@@ -31,10 +31,11 @@ class MoveStatsForType(NamedTuple):
 
 def calculate_damage(generation: int, move: MoveInfo) -> float | None:
     logger.info("Calculating damage for move %s (ID %d)", move["name"], move["id"])
+    meta = move["meta"]
     power = move["power"]
 
     # Not valid for our purposes
-    if move["meta"] is None:
+    if meta is None:
         logger.debug("Skipping move, no metadata")
         return None
 
@@ -60,8 +61,12 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
         damage *= accuracy / 100
 
     # Critical hit chance and damage
-    crit_chance = get_crit_chance(generation, move["meta"]["crit_rate"])
+    crit_chance = get_crit_chance(generation, meta["crit_rate"])
     damage *= 1.0 + crit_chance
+
+    # Evaluate multi-hit moves
+    average_hits = (meta["max_hits"] - meta["min_hits"]) / 2
+    damage *= average_hits
 
     # TODO remaining modifications
     is_priority = move["priority"] > 0  # TODO what about negative prio
