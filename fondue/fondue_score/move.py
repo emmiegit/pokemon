@@ -1,9 +1,12 @@
-from .api import fetch_move_info
+from collections import defaultdict
+
+from .api import MoveInfo, fetch_all_moves, fetch_move_info
 from .crit import get_crit_chance
 
+MoveDamageByType = dict[str, dict[str, float]]
 
-def calculate_damage(generation: int, move_url: str) -> float | None:
-    move = fetch_move_info(move_url)
+
+def calculate_damage(generation: int, move: MoveInfo) -> float | None:
     power = move["power"]
 
     # Skip moves less than 50 BP
@@ -16,3 +19,18 @@ def calculate_damage(generation: int, move_url: str) -> float | None:
     # TODO
     ...
     return power * (1.0 + crit_chance)
+
+
+def compile_moves_by_type(generation: int) -> MoveDamageByType:
+    moves_by_type: MoveDamageByType = defaultdict(dict)
+    for move_spec in fetch_all_moves(generation):
+        move = fetch_move_info(move_spec["url"])
+        move_name = move["name"]
+        move_type = move["type"]["name"]
+        damage = calculate_damage(generation, move)
+        if damage is None:
+            # Exclude from list
+            continue
+
+        moves_by_type[move_type][move_name] = damage
+    return moves_by_type

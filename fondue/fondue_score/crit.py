@@ -1,4 +1,3 @@
-
 def get_crit_chance(generation: int, crit_rate: int) -> float:
     match generation:
         case 1:
