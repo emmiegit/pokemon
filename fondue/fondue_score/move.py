@@ -17,7 +17,7 @@ class MoveStatsForType(NamedTuple):
 
 
 def calculate_damage(generation: int, move: MoveInfo) -> float | None:
-    logger.debug("Calculating damage for move %s (ID %d)", move["name"], move["id"])
+    logger.info("Calculating damage for move %s (ID %d)", move["name"], move["id"])
     power = move["power"]
 
     # Not valid for our purposes
