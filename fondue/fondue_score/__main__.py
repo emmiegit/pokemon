@@ -2,7 +2,7 @@ import argparse
 import logging
 import sys
 
-from .api import fetch_version_group
+from .api import fetch_game_info
 from .move import calculate_damage_by_type, compile_moves_by_type
 
 if __name__ == "__main__":
@@ -14,11 +14,8 @@ if __name__ == "__main__":
         help="Enable logging for scorer execution",
     )
     argparser.add_argument(
-        "generation",
-        type=int,
-        nargs="?",
-        default=4,
-        help="Which generation to run for",
+        "game",
+        help="What game/version group to run the calculations for",
     )
     args = argparser.parse_args()
 
@@ -32,8 +29,10 @@ if __name__ == "__main__":
         logger.addHandler(log_handler)
 
     # Fetch results
-    logger.info("Calculating damage for all moves in generation %d", args.generation)
-    moves_by_type = calculate_damage_by_type(args.generation)
+    logger.debug("Fetching game / verison group information")
+    game = fetch_game_info(args.game)
+    logger.info("Calculating damage for all moves in %s", game)
+    moves_by_type = calculate_damage_by_type(game)
     stats = compile_moves_by_type(moves_by_type)
 
     # Display the results in a nice way
