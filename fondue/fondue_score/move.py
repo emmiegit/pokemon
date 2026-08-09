@@ -35,12 +35,17 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
         logger.debug("Skipping move, BP %d < 50", power)
         return None
 
+    # Calculate amortized damage
+    damage = power
+
+    # Critical hit chance and damage
     crit_chance = get_crit_chance(generation, move["meta"]["crit_rate"])
+    damage *= 1.0 + crit_chance
+
+    # TODO remaining modifications
     is_priority = move["priority"] > 0  # TODO what about negative prio
 
-    # TODO
-    ...
-    return power * (1.0 + crit_chance)
+    return damage
 
 
 def calculate_damage_by_type(generation: int) -> MoveDamageByType:
