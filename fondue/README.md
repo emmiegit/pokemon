@@ -6,6 +6,14 @@ Uses [PokéAPI](https://pokeapi.co/) for data. Designed for Generation IV, but m
 
 Description of methodology to follow.
 
+### Execution
+
+```sh
+python -m fondue_score [game]
+```
+
+Give the name of the game / version group, with some abbreviations accepted. For instance, `platinum` for Platinum or `hgss` for HeartGold/SoulSilver.
+
 ### Development
 
 For formatting, linting, etc.:
