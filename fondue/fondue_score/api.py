@@ -28,7 +28,7 @@ class MetaMoveInfo(TypedDict):
 class MoveInfo(TypedDict):
     id: int
     name: str
-    power: int
+    power: int | None
     accuracy: int
     pp: int
     priority: int

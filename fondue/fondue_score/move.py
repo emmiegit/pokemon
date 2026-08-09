@@ -9,6 +9,10 @@ MoveDamageByType = dict[str, dict[str, float]]
 def calculate_damage(generation: int, move: MoveInfo) -> float | None:
     power = move["power"]
 
+    # Skip status moves
+    if power is None:
+        return None
+
     # Skip moves less than 50 BP
     if power < 50:
         return None
