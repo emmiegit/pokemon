@@ -5,16 +5,6 @@ import sys
 from .move import compile_moves_by_type
 
 
-def get_log_level(verbosity: int) -> int:
-    match verbosity:
-        case 1:
-            return logging.INFO
-        case 2:
-            return logging.DEBUG
-        case 3 | _:
-            return logging.TRACE
-
-
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser("Fondue Scorer")
     argparser.add_argument(
@@ -35,7 +25,7 @@ if __name__ == "__main__":
     # Set up logger (if enabled)
     logger = logging.getLogger(__package__)
     if args.verbose > 0:
-        logger.setLevel(get_log_level(args.verbose))
+        logger.setLevel(logging.DEBUG if args.verbose > 1 else logging.INFO)
         log_handler = logging.StreamHandler(sys.stdout)
         log_formatter = logging.Formatter("[%(levelname)s] %(message)s")
         log_handler.setFormatter(log_formatter)

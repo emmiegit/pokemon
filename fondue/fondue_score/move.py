@@ -22,12 +22,12 @@ def calculate_damage(generation: int, move: MoveInfo) -> float | None:
 
     # Skip status moves
     if power is None:
-        logger.trace("Skipping move, status only")
+        logger.debug("Skipping move, status only")
         return None
 
     # Skip moves less than 50 BP
     if power < 50:
-        logger.trace("Skipping move, BP %d < 50", power)
+        logger.debug("Skipping move, BP %d < 50", power)
         return None
 
     crit_chance = get_crit_chance(generation, move["meta"]["crit_rate"])
