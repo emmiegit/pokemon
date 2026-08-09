@@ -48,8 +48,10 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
     meta = move["meta"]
     power = move["power"]
 
-    # Not valid for our purposes
+    # Filter out moves
+
     if meta is None:
+        # Not valid for our purposes
         logger.debug("Skipping move, no metadata")
         return None
 
