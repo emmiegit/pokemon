@@ -15,6 +15,7 @@ PokemonBaseStatTotalsByType = dict[str, list[int]]
 
 
 def fetch_all_pokemon_species(game: GameInfo) -> list[PokemonSpeciesInfo]:
+    logger.info("Fetching all Pokémon species")
     all_species = []
     for generation in game.generations:
         for species_spec in generation["pokemon_species"]:
@@ -25,6 +26,7 @@ def fetch_all_pokemon_species(game: GameInfo) -> list[PokemonSpeciesInfo]:
 
 
 def fetch_all_pokemon(all_species: Iterable[PokemonSpeciesInfo]) -> list[PokemonInfo]:
+    logger.info("Fetching all Pokémon")
     all_pokemon = []
     for species in all_species:
         for variety in species["varieties"]:
