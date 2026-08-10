@@ -1,9 +1,13 @@
 import argparse
 import logging
 import sys
+from collection import defaultdict
 
 from .game import get_game_info
 from .move import calculate_damage_by_type, compile_moves_by_type
+from .pokemon import fetch_all_pokemon, fetch_all_pokemon_species
+from .stats import get_pokemon_stats, get_pokemon_stats_by_name, get_base_stat_total
+from .types import group_pokemon_by_type
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser("Fondue Scorer")
@@ -32,6 +36,16 @@ if __name__ == "__main__":
     # Fetch results
     logger.debug("Fetching game / verison group information")
     game = get_game_info(args.game)
+
+    logger.info("Fetching Pokémon information for %s", game)
+    all_species = fetch_all_pokemon_species(game)
+    all_pokemon = fetch_all_pokemon(all_species)
+
+    logger.info("Organizing Pokémon by type and stats")
+    pokemon_stats = get_pokemon_stats_by_name(all_pokemon, game)
+    pokemon_by_type = group_pokemon_by_type(all_pokemon, game)
+    bsts_by_type = get_pokemon_bsts_by_type(pokemon_stats, pokemon_by_type)
+
     logger.info("Calculating damage for all moves in %s", game)
     moves_by_type = calculate_damage_by_type(game)
     damage_compl = compile_moves_by_type(moves_by_type)
