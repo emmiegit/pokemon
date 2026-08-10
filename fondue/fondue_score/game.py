@@ -45,7 +45,11 @@ def _map_generation(value: str) -> int:
 
 class GameInfo(NamedTuple):
     generation: int
-    version_group: str
+    version_group_data: VersionGroupInfo
+
+    @property
+    def version_group(self) -> str:
+        return self.version_group_data["name"]
 
     def __str__(self) -> str:
         return f"generation {self.generation} (game '{self.version_group}')"
@@ -58,5 +62,5 @@ def get_game_info(version_group: str) -> GameInfo:
     generation = _map_generation(data["generation"]["name"])
     return GameInfo(
         generation=generation,
-        version_group=data["name"],
+        version_group_data=data,
     )
