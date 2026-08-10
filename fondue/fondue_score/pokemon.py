@@ -4,6 +4,7 @@ from typing import Iterable
 
 from .api import fetch_pokemon, fetch_pokemon_species, PokemonInfo, PokemonSpeciesInfo
 from .game import GameInfo
+from .types import get_pokemon_types
 
 logger = logging.getLogger(__name__)
 

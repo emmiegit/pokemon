@@ -89,6 +89,12 @@ class MoveInfo(TypedDict):
     target: SpecReference
 
 
+class TypeInfo(TypedDict):
+    id: int
+    name: str
+    generation: SpecReference
+    pokemon: list[SpecReference]
+    moves: list[SpecReference]
 
 
 class StatInfo(TypedDict):
