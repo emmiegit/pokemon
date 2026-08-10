@@ -1,12 +1,17 @@
 import logging
-from collections import defaultdict
 from typing import Iterable
 
 from .api import fetch_pokemon, fetch_pokemon_species, PokemonInfo, PokemonSpeciesInfo
 from .game import GameInfo
-from .types import get_pokemon_types
+from .stats import CurrentPokemonStats, get_base_stat_total
+from .types import PokemonByType, get_pokemon_types
 
 logger = logging.getLogger(__name__)
+
+PokemonBaseStatTotalsByType = dict[str, list[int]]
+
+
+# Main fetch methods
 
 
 def fetch_all_pokemon_species(game: GameInfo) -> list[PokemonSpeciesInfo]:
@@ -27,3 +32,19 @@ def fetch_all_pokemon(all_species: Iterable[PokemonSpeciesInfo]) -> list[Pokemon
             pokemon = fetch_pokemon(variety["pokemon"]["url"])
             all_pokemon.append(pokemon)
     return all_pokemon
+
+
+# Downstream aggregation methods
+
+
+def get_pokemon_bsts_by_type(
+    pokemon_stats: dict[str, CurrentPokemonStats],
+    pokemon_by_type: PokemonByType,
+) -> PokemonBaseStatTotalsByType:
+    bsts_by_type = {}
+    for p_type, pokemon_list in pokemon_by_type.items():
+        bsts_by_type[p_type] = [
+            get_base_stat_total(pokemon_stats[pokemon["name"]])
+            for pokemon in pokemon_list
+        ]
+    return bsts_by_type
