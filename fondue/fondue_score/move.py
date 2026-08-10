@@ -118,7 +118,9 @@ def calculate_damage_by_type(game: GameInfo) -> MoveDamageByType:
     return moves_by_type
 
 
-def compile_moves_by_type(moves_by_type: MoveDamageByType) -> list[MoveCompilationForType]:
+def compile_moves_by_type(
+    moves_by_type: MoveDamageByType,
+) -> list[MoveCompilationForType]:
     logger.debug("Organizing types by total damage from moves...")
     stats_by_type = [
         MoveCompilationForType(

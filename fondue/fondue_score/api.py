@@ -108,11 +108,17 @@ class PastStatInfo(TypedDict):
     stats: list[StatInfo]
 
 
+class PastTypeInfo(TypedDict):
+    generation: SpecReference
+    types: list[TypeSpecReference]
+
+
 class PokemonInfo(TypedDict):
     id: int
     name: str
     species: SpecReference
     types: list[TypeSpecReference]
+    past_types: list[PastTypeInfo]
     forms: list[SpecReference]
     moves: list[SpecReference]
     is_default: bool

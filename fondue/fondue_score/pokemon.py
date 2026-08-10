@@ -1,10 +1,10 @@
 import logging
-from typing import Iterable
+from collections.abc import Iterable
 
-from .api import fetch_pokemon, fetch_pokemon_species, PokemonInfo, PokemonSpeciesInfo
+from .api import PokemonInfo, PokemonSpeciesInfo, fetch_pokemon, fetch_pokemon_species
 from .game import GameInfo
 from .stats import CurrentPokemonStats, get_base_stat_total
-from .types import PokemonByType, get_pokemon_types
+from .types import PokemonByType
 
 logger = logging.getLogger(__name__)
 

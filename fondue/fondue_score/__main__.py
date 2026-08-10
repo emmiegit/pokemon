@@ -1,12 +1,15 @@
 import argparse
 import logging
 import sys
-from collection import defaultdict
 
 from .game import get_game_info
 from .move import calculate_damage_by_type, compile_moves_by_type
-from .pokemon import fetch_all_pokemon, fetch_all_pokemon_species
-from .stats import get_pokemon_stats, get_pokemon_stats_by_name, get_base_stat_total
+from .pokemon import (
+    fetch_all_pokemon,
+    fetch_all_pokemon_species,
+    get_pokemon_bsts_by_type,
+)
+from .stats import get_pokemon_stats_by_name
 from .types import group_pokemon_by_type
 
 if __name__ == "__main__":

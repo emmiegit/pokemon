@@ -1,5 +1,6 @@
 import logging
-from typing import Iterable, Final, Mapping
+from collections.abc import Iterable
+from typing import Final
 
 from .api import PokemonInfo, StatInfo
 from .game import GameInfo

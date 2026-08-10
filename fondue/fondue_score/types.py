@@ -1,6 +1,8 @@
 import logging
+from collections import defaultdict
+from collections.abc import Iterable
 
-from .api import PokemonInfo, TypeInfo
+from .api import PokemonInfo, TypeSpecReference
 from .game import GameInfo
 
 logger = logging.getLogger(__name__)
@@ -8,11 +10,11 @@ logger = logging.getLogger(__name__)
 PokemonByType = dict[str, list[PokemonInfo]]
 
 
-def get_pokemon_types(pokemon: PokemonInfo, game: GameInfo) -> list[TypeInfo]:
+def get_pokemon_types(pokemon: PokemonInfo, game: GameInfo) -> list[TypeSpecReference]:
     logger.debug("Getting latest Pokémon types for %s", pokemon["name"])
     for past_types in pokemon["past_types"]:
         if game.latest_generation["name"] == past_types["generation"]["name"]:
-            return past_types
+            return past_types["types"]
     return pokemon["types"]
 
 
@@ -23,6 +25,6 @@ def group_pokemon_by_type(
     types = defaultdict(list)
     for pokemon in all_pokemon:
         for p_type in get_pokemon_types(pokemon, game):
-            p_type_name = p_type["name"]
+            p_type_name = p_type["type"]["name"]
             types[p_type_name].append(pokemon)
     return types
