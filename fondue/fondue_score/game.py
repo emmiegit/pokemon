@@ -2,11 +2,13 @@ import logging
 from typing import NamedTuple
 
 from .api import (
+    fetch_generation,
+    fetch_version_group,
+)
+from .api_types import (
     GenerationInfo,
     SpecReference,
     VersionGroupInfo,
-    fetch_generation,
-    fetch_version_group,
 )
 
 logger = logging.getLogger(__name__)

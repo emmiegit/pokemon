@@ -2,7 +2,7 @@ import logging
 from collections.abc import Iterable
 from typing import Final
 
-from .api import PokemonInfo, StatInfo
+from .api_types import PokemonInfo, StatInfo
 from .game import GameInfo
 
 logger = logging.getLogger(__name__)
