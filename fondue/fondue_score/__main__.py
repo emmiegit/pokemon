@@ -48,6 +48,9 @@ if __name__ == "__main__":
     pokemon_stats = get_pokemon_stats_by_name(all_pokemon, game)
     pokemon_by_type = group_pokemon_by_type(all_pokemon, game)
     bsts_by_type = get_pokemon_bsts_by_type(pokemon_stats, pokemon_by_type)
+    mean_bst_by_type = {
+        type_name: sum(bsts) / len(bsts) for type_name, bsts in bsts_by_type.items()
+    }
 
     logger.info("Calculating damage for all moves in %s", game)
     moves_by_type = calculate_damage_by_type(game)
