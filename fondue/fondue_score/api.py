@@ -154,6 +154,16 @@ def fetch_all_moves(generation: int) -> list[SpecReference]:
     return moves
 
 
+def fetch_all_pokemon_species(generation: int) -> list[SpecReference]:
+    logger.info("Fetching all Pokémon species for generation %d", generation)
+    species = []
+    for current_gen in range(1, generation + 1):
+        logger.debug("Fetching generation %d species...", current_gen)
+        data = pokeapi_request(f"generation/{current_gen}")
+        species.extend(data["pokemon_species"])
+    return species
+
+
 def fetch_move_info(url: str) -> MoveInfo:
     data = pokeapi_request(url)
     return cast(MoveInfo, data)
