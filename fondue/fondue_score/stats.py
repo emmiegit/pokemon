@@ -14,6 +14,9 @@ REMOVED_STATS: Final[list[tuple[int, str]]] = [(1, "special")]
 # (first_generation_id with the stat, stat_name)
 ADDED_STATS: Final[list[tuple[int, str]]] = [(2, "special-attack"), (2, "special-defense")]
 
+# Key is the stat_name
+CurrentPokemonStats = dict[str, StatInfo]
+
 
 def stat_is_removed(stat_name: str, generation: int) -> bool:
     for last_generation_id, removed_stat_name in REMOVED_STATS:
@@ -22,7 +25,7 @@ def stat_is_removed(stat_name: str, generation: int) -> bool:
     return False
 
 
-def get_pokemon_stats(pokemon: PokemonInfo, game: GameInfo) -> dict[str, StatInfo]:
+def get_pokemon_stats(pokemon: PokemonInfo, game: GameInfo) -> CurrentPokemonStats:
     logger.debug("Getting latest Pokémon stats for %s", pokemon["name"])
     stats = {stat["stat"]["name"]: stat for stat in pokemon["stats"]}
     for all_past_stats in pokemon["past_stats"]:
@@ -49,3 +52,7 @@ def get_pokemon_stats(pokemon: PokemonInfo, game: GameInfo) -> dict[str, StatInf
             del stats[added_stat_name]
 
     return stats
+
+
+def get_base_stat_total(stats: CurrentPokemonStats) -> int:
+    return sum(stat["base_stat"] for stat in stats.values())
