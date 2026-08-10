@@ -21,6 +21,11 @@ class SpecReference(TypedDict):
     url: str
 
 
+class TypeSpecReference(TypedDict):
+    slot: int
+    type: SpecReference
+
+
 class VersionGroupInfo(TypedDict):
     generation: SpecReference
     id: int
@@ -84,9 +89,6 @@ class MoveInfo(TypedDict):
     target: SpecReference
 
 
-class TypeInfo(TypedDict):
-    slot: int
-    type: SpecReference
 
 
 class StatInfo(TypedDict):
@@ -104,7 +106,7 @@ class PokemonInfo(TypedDict):
     id: int
     name: str
     species: SpecReference
-    types: list[TypeInfo]
+    types: list[TypeSpecReference]
     forms: list[SpecReference]
     moves: list[SpecReference]
     is_default: bool
