@@ -1,7 +1,7 @@
 import logging
 from typing import NamedTuple
 
-from .api import fetch_version_group
+from .api import fetch_generation, fetch_version_group, GenerationInfo, VersionGroupInfo
 
 logger = logging.getLogger(__name__)
 
@@ -18,34 +18,17 @@ def _map_version_group_name(value: str) -> str:
             return value
 
 
-def _map_generation(value: str) -> int:
-    # Avoid a request just for a number
-    match value:
-        case "generation-i":
-            return 1
-        case "generation-ii":
-            return 2
-        case "generation-iii":
-            return 3
-        case "generation-iv":
-            return 4
-        case "generation-v":
-            return 5
-        case "generation-vi":
-            return 6
-        case "generation-vii":
-            return 7
-        case "generation-viii":
-            return 8
-        case "generation-ix":
-            return 9
-        case _:
-            raise ValueError(value)
-
-
 class GameInfo(NamedTuple):
-    generation: int
+    generations: list[GenerationInfo]
     version_group_data: VersionGroupInfo
+
+    @property
+    def latest_generation(self) -> GenerationInfo:
+        return self.generations[-1]
+
+    @property
+    def generation(self) -> int:
+        return self.latest_generation["id"]
 
     @property
     def version_group(self) -> str:
@@ -57,10 +40,17 @@ class GameInfo(NamedTuple):
 
 def get_game_info(version_group: str) -> GameInfo:
     logger.info("Fetching version group information for '%s'", version_group)
+
     version_group = _map_version_group_name(version_group)
-    data = fetch_version_group(version_group)
-    generation = _map_generation(data["generation"]["name"])
+    version_group_data = fetch_version_group(version_group)
+
+    latest_generation = fetch_generation(version_group_data["generation"]["name"])
+    generations = []
+    for n in range(1, latest_generation["id"]):
+        generations.append(fetch_generation(n))
+    generations.append(latest_generation)
+
     return GameInfo(
-        generation=generation,
-        version_group_data=data,
+        generations=generations,
+        version_group_data=version_group_data,
     )

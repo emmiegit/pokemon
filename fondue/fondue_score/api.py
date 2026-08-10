@@ -32,6 +32,16 @@ class VersionGroupInfo(TypedDict):
     versions: list[SpecReference]
 
 
+class GenerationInfo(TypedDict):
+    id: int
+    name: str
+    main_region: SpecReference
+    moves: list[SpecReference]
+    pokemon_species: list[SpecReference]
+    types: list[SpecReference]
+    version_groups: list[SpecReference]
+
+
 class MoveMachineSpec(TypedDict):
     machine: NamelessSpecReference
     version_group: SpecReference
@@ -121,6 +131,11 @@ def pokeapi_request(path: str) -> dict[str, Any]:
 def fetch_version_group(version_group: str) -> VersionGroupInfo:
     data = pokeapi_request(f"version-group/{version_group}")
     return cast(VersionGroupInfo, data)
+
+
+def fetch_generation(generation: str | int) -> GenerationInfo:
+    data = pokeapi_request(f"generation/{generation}")
+    return cast(GenerationInfo, data)
 
 
 def fetch_machine(url: str) -> MachineInfo:
