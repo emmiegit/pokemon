@@ -1,5 +1,5 @@
 import logging
-from typing import Final
+from typing import Iterable, Final, Mapping
 
 from .api import PokemonInfo, StatInfo
 from .game import GameInfo
@@ -52,6 +52,15 @@ def get_pokemon_stats(pokemon: PokemonInfo, game: GameInfo) -> CurrentPokemonSta
             del stats[added_stat_name]
 
     return stats
+
+
+def get_pokemon_stats_by_name(
+    all_pokemon: Iterable[PokemonInfo],
+    game: GameInfo,
+) -> dict[str, CurrentPokemonStats]:
+    return {
+        pokemon["name"]: get_pokemon_stats(pokemon, game) for pokemon in all_pokemon
+    }
 
 
 def get_base_stat_total(stats: CurrentPokemonStats) -> int:
