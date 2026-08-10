@@ -1,7 +1,7 @@
 import logging
 from typing import NamedTuple
 
-from .api import fetch_generation, fetch_version_group, GenerationInfo, VersionGroupInfo
+from .api import fetch_generation, fetch_version_group, GenerationInfo, SpecReference, VersionGroupInfo
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,18 @@ class GameInfo(NamedTuple):
     @property
     def version_group(self) -> str:
         return self.version_group_data["name"]
+
+    def all_moves(self) -> list[SpecReference]:
+        moves: list[SpecReference] = []
+        for gen in self.generations:
+            moves.extend(gen["moves"])
+        return moves
+
+    def all_species(self) -> list[SpecReference]:
+        species: list[SpecReference] = []
+        for gen in self.generations:
+            species.extend(gen["pokemon_species"])
+        return species
 
     def __str__(self) -> str:
         return f"generation {self.generation} (game '{self.version_group}')"

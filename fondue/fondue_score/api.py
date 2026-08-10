@@ -5,6 +5,8 @@ from typing import Any, TypedDict, cast
 
 import requests
 
+from .game import GameInfo
+
 API_ENDPOINT = "https://pokeapi.co/api/v2"
 API_CACHE = True  # store results locally to save on request latency
 API_CACHE_DIRECTORY = "cached_requests"
@@ -142,26 +144,6 @@ def fetch_machine(url: str) -> MachineInfo:
     assert "/machine/" in url
     data = pokeapi_request(url)
     return cast(MachineInfo, data)
-
-
-def fetch_all_moves(generation: int) -> list[SpecReference]:
-    logger.info("Fetching all moves for generation %d", generation)
-    moves = []
-    for current_gen in range(1, generation + 1):
-        logger.debug("Fetching generation %d moves...", current_gen)
-        data = pokeapi_request(f"generation/{current_gen}")
-        moves.extend(data["moves"])
-    return moves
-
-
-def fetch_all_pokemon_species(generation: int) -> list[SpecReference]:
-    logger.info("Fetching all Pokémon species for generation %d", generation)
-    species = []
-    for current_gen in range(1, generation + 1):
-        logger.debug("Fetching generation %d species...", current_gen)
-        data = pokeapi_request(f"generation/{current_gen}")
-        species.extend(data["pokemon_species"])
-    return species
 
 
 def fetch_move_info(url: str) -> MoveInfo:

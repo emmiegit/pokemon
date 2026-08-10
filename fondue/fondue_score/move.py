@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from typing import NamedTuple
 
-from .api import MoveInfo, fetch_all_moves, fetch_machine, fetch_move_info
+from .api import MoveInfo, fetch_machine, fetch_move_info
 from .crit import get_crit_chance
 from .game import GameInfo
 
@@ -105,7 +105,7 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
 
 def calculate_damage_by_type(game: GameInfo) -> MoveDamageByType:
     moves_by_type: MoveDamageByType = defaultdict(dict)
-    for move_spec in fetch_all_moves(game.generation):
+    for move_spec in game.all_moves():
         move = fetch_move_info(move_spec["url"])
         move_name = move["name"]
         move_type = move["type"]["name"]
