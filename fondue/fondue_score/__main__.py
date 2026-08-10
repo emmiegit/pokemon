@@ -34,12 +34,12 @@ if __name__ == "__main__":
     game = get_game_info(args.game)
     logger.info("Calculating damage for all moves in %s", game)
     moves_by_type = calculate_damage_by_type(game)
-    stats = compile_moves_by_type(moves_by_type)
+    damage_compl = compile_moves_by_type(moves_by_type)
 
     # Display the results in a nice way
-    max_type_name_length = max(len(stat.type) for stat in stats)
-    for stat in stats:
-        type_name = stat.type.upper()
+    max_type_name_length = max(len(stat.type) for stat in damage_compl)
+    for compl in damage_compl:
+        type_name = compl.type.upper()
         print(
-            f"{type_name:{max_type_name_length}} {stat.damage_total:.2f} ({stat.move_count} moves)"
+            f"{type_name:{max_type_name_length}} {compl.damage_total:.2f} ({compl.move_count} moves)"
         )

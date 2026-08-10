@@ -24,7 +24,7 @@ MoveDamageByType = dict[str, dict[str, float]]
 logger = logging.getLogger(__name__)
 
 
-class MoveStatsForType(NamedTuple):
+class MoveCompilationForType(NamedTuple):
     type: str
     damage_total: float
     move_count: int
@@ -118,10 +118,10 @@ def calculate_damage_by_type(game: GameInfo) -> MoveDamageByType:
     return moves_by_type
 
 
-def compile_moves_by_type(moves_by_type: MoveDamageByType) -> list[MoveStatsForType]:
+def compile_moves_by_type(moves_by_type: MoveDamageByType) -> list[MoveCompilationForType]:
     logger.debug("Organizing types by total damage from moves...")
     stats_by_type = [
-        MoveStatsForType(
+        MoveCompilationForType(
             type=move_type,
             damage_total=sum(moves.values()),
             move_count=len(moves),
