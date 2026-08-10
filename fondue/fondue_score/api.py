@@ -95,6 +95,11 @@ class StatInfo(TypedDict):
     stat: SpecReference
 
 
+class PastStatInfo(TypedDict):
+    generation: SpecReference
+    stats: list[StatInfo]
+
+
 class PokemonInfo(TypedDict):
     id: int
     name: str
@@ -107,7 +112,7 @@ class PokemonInfo(TypedDict):
     height: int
     weight: int
     stats: list[StatInfo]
-    past_stats: list[StatInfo]
+    past_stats: list[PastStatInfo]
 
 
 class PokemonSpeciesVarietyInfo(TypedDict):
