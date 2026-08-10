@@ -86,6 +86,57 @@ class MoveInfo(TypedDict):
     target: SpecReference
 
 
+class TypeInfo(TypedDict):
+    slot: int
+    type: SpecReference
+
+
+class StatInfo(TypedDict):
+    base_stat: int
+    effort: int
+    stat: SpecReference
+
+
+class PokemonInfo(TypedDict):
+    id: int
+    name: str
+    species: SpecReference
+    types: list[TypeInfo]
+    forms: list[SpecReference]
+    moves: list[SpecReference]
+    is_default: bool
+    base_experience: int
+    height: int
+    weight: int
+    stats: list[StatInfo]
+    past_stats: list[StatInfo]
+
+
+class PokemonSpeciesVarietyInfo(TypedDict):
+    is_default: bool
+    pokemon: SpecReference
+
+
+class PokemonSpeciesInfo(TypedDict):
+    id: int
+    name: str
+    order: int
+    evolution_chain: NamelessSpecReference
+    evolves_from_species: SpecReference
+    varieties: list[PokemonSpeciesVarietyInfo]
+    shape: SpecReference
+    forms_switchable: bool
+    gender_rate: int
+    has_gender_differences: bool
+    generation: SpecReference
+    growth_rate: SpecReference
+    hatch_counter: int
+    egg_groups: list[SpecReference]
+    is_baby: bool
+    is_legendary: bool
+    is_mythical: bool
+
+
 def _cache_path(request_path: str) -> str:
     request_path = request_path.strip("/")
     file_name = request_path.replace("/", ".") + ".json"
@@ -149,3 +200,13 @@ def fetch_machine(url: str) -> MachineInfo:
 def fetch_move_info(url: str) -> MoveInfo:
     data = pokeapi_request(url)
     return cast(MoveInfo, data)
+
+
+def fetch_pokemon(url: str) -> PokemonInfo:
+    data = pokeapi_request(url)
+    return cast(PokemonInfo, data)
+
+
+def fetch_pokemon_species(url: str) -> PokemonSpeciesInfo:
+    data = pokeapi_request(url)
+    return cast(PokemonSpeciesInfo, data)
