@@ -40,6 +40,12 @@ class GameInfo(NamedTuple):
     def version_group(self) -> str:
         return self.version_group_data["name"]
 
+    def generation_from_name(self, generation_name: str) -> int | None:
+        for gen in self.generations:
+            if gen["name"] == generation_name:
+                return gen["id"]
+        return None
+
     def all_moves(self) -> list[SpecReference]:
         moves: list[SpecReference] = []
         for gen in self.generations:
