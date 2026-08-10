@@ -201,15 +201,18 @@ def fetch_machine(url: str) -> MachineInfo:
 
 
 def fetch_move_info(url: str) -> MoveInfo:
+    assert "/move/" in url
     data = pokeapi_request(url)
     return cast(MoveInfo, data)
 
 
 def fetch_pokemon(url: str) -> PokemonInfo:
+    assert "/pokemon/" in url
     data = pokeapi_request(url)
     return cast(PokemonInfo, data)
 
 
 def fetch_pokemon_species(url: str) -> PokemonSpeciesInfo:
+    assert "/pokemon-species/" in url
     data = pokeapi_request(url)
     return cast(PokemonSpeciesInfo, data)
