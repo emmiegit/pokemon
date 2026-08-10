@@ -5,8 +5,6 @@ from typing import Any, TypedDict, cast
 
 import requests
 
-from .game import GameInfo
-
 API_ENDPOINT = "https://pokeapi.co/api/v2"
 API_CACHE = True  # store results locally to save on request latency
 API_CACHE_DIRECTORY = "cached_requests"
