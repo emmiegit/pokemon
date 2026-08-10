@@ -12,7 +12,10 @@ REMOVED_STATS: Final[list[tuple[int, str]]] = [(1, "special")]
 
 # Stats that were added in later gens
 # (first_generation_id with the stat, stat_name)
-ADDED_STATS: Final[list[tuple[int, str]]] = [(2, "special-attack"), (2, "special-defense")]
+ADDED_STATS: Final[list[tuple[int, str]]] = [
+    (2, "special-attack"),
+    (2, "special-defense"),
+]
 
 # Key is the stat_name
 CurrentPokemonStats = dict[str, StatInfo]
