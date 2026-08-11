@@ -18,12 +18,50 @@ def _map_version_group_name(value: str) -> str:
     # Common or abbreviated names for convenience
     # Add items here as needed
     match value:
-        case "hgss" | "heartgold" | "soulsilver":
-            return "heartgold-soulsilver"
-        case "plat":
-            return "platinum"
+        case "rb" | "red" | "blue":
+            return "red-blue"
+        case "y":
+            return "yellow"
+        case "gs" | "gold" | "silver":
+            return "gold-silver"
+        case "c":
+            return "crystal"
+        case "rs" | "ruby" | "sapphire":
+            return "ruby-sapphire"
+        case "e":
+            return "emerald"
+        case "firered" | "fire-red" | "fr" | "leafgreen" | "leaf-green" | "lg":
+            return "firered-leafgreen"
         case "dp" | "diamond" | "pearl":
             return "diamond-pearl"
+        case "plat":
+            return "platinum"
+        case "hgss" | "heartgold" | "soulsilver":
+            return "heartgold-soulsilver"
+        case "bw" | "black" | "white":
+            return "black-white"
+        case "xy" | "x" | "y":
+            return "x-y"
+        case (
+            "oras"
+            | "omegaruby"
+            | "omega-ruby"
+            | "or"
+            | "alphasapphire"
+            | "alpha-sapphire"
+            | "as"
+        ):
+            return "omega-ruby-alpha-sapphire"
+        case "sm" | "sun" | "moon":
+            return "sun-moon"
+        case (
+            "usum" | "ultrasun" | "ultra-sun" | "us" | "ultamoon" | "ultra-moon" | "um"
+        ):
+            return "ulta-sun-ultra-moon"
+        case "lets-go-pikachu" | "lgp" | "lets-go-eevee" | "lge":
+            return "lets-go-pikachu-lets-go-eevee"
+        case "ss" | "sword" | "shield":
+            return "sword-shield"
         case _:
             return value
 
