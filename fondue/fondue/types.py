@@ -49,6 +49,19 @@ def get_pokemon_types(pokemon: PokemonInfo, game: GameInfo) -> list[TypeSpecRefe
 
     return types
 
+
+def fetch_all_types(game: GameInfo) -> list[TypeInfo]:
+    types = []
+    for type_spec in game.all_types():
+        p_type = fetch_type(type_spec["url"])
+        if not p_type["pokemon"]:
+            # weird type, like shadow. skip
+            continue
+
+        types.append(p_type)
+    return types
+
+
 def group_pokemon_by_type(
     all_pokemon: Iterable[PokemonInfo],
     game: GameInfo,
