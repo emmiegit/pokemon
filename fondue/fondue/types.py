@@ -62,6 +62,27 @@ def fetch_all_types(game: GameInfo) -> list[TypeInfo]:
     return types
 
 
+def get_type_damage_relations(p_type: TypeInfo, game: GameInfo) -> DamageRelationInfo:
+    logger.debug("Getting latest Pokémon type damage relations for %s", p_type["name"])
+
+    # See get_pokemon_types() for logic
+    relations = p_type["damage_relations"]
+    override: tuple[int, DamageRelationInfo] | None = None
+
+    for past_relations in p_type["past_damage_relations"]:
+        generation = fetch_generation(past_relations["generation"]["name"])
+        if generation["id"] < game.generation:
+            continue
+
+        if override is None or generation["id"] > override[0]:
+            override = (generation["id"], past_relations["damage_relations"])
+
+    if override is not None:
+        _, relations = override
+
+    return relations
+
+
 def group_pokemon_by_type(
     all_pokemon: Iterable[PokemonInfo],
     game: GameInfo,
