@@ -11,6 +11,7 @@ from .api_types import (
     PokemonFormInfo,
     PokemonInfo,
     PokemonSpeciesInfo,
+    TypeInfo,
     VersionGroupInfo,
 )
 
@@ -58,6 +59,12 @@ def fetch_move_info(url: str) -> MoveInfo:
     assert "/move/" in url
     data = pokeapi_request(url)
     return cast(MoveInfo, data)
+
+
+def fetch_type(url: str) -> TypeInfo:
+    assert "/type/" in url
+    data = pokeapi_request(url)
+    return cast(TypeInfo, data)
 
 
 def fetch_pokemon(url: str) -> PokemonInfo:
