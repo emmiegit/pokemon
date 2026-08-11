@@ -4,7 +4,13 @@ from collections.abc import Iterable
 from enum import Enum, unique
 
 from .api import fetch_generation, fetch_type
-from .api_types import DamageRelationInfo, PokemonInfo, TypeInfo, TypeSpecReference
+from .api_types import (
+    DamageRelationInfo,
+    PokemonInfo,
+    SpecReference,
+    TypeInfo,
+    TypeSpecReference,
+)
 from .game import GameInfo
 
 logger = logging.getLogger(__name__)
@@ -90,7 +96,9 @@ def get_type_damage_relations(p_type: TypeInfo, game: GameInfo) -> DamageRelatio
     return relations
 
 
-def get_type_damage_matrix(all_types: list[TypeInfo], game: GameInfo) -> TypeEffectivenessMatrix:
+def get_type_damage_matrix(
+    all_types: list[TypeInfo], game: GameInfo
+) -> TypeEffectivenessMatrix:
     matrix: TypeEffectivenessMatrix = {}
     for attacking_type in all_types:
         attacking_type_name = attacking_type["name"]
@@ -98,11 +106,20 @@ def get_type_damage_matrix(all_types: list[TypeInfo], game: GameInfo) -> TypeEff
         for defending_type in all_types:
             defending_type_name = defending_type["name"]
 
-            if type_in_spec_list(defending_type_name, attacking_relations["double_damage_to"]):
+            if type_in_spec_list(
+                defending_type_name,
+                attacking_relations["double_damage_to"],
+            ):
                 effectiveness = TypeEffectiveness.SUPEREFFECTIVE
-            elif type_in_spec_list(defending_type_name, attacking_relations["half_damage_to"]):
+            elif type_in_spec_list(
+                defending_type_name,
+                attacking_relations["half_damage_to"],
+            ):
                 effectiveness = TypeEffectiveness.RESISTED
-            elif type_in_spec_list(defending_type_name, attacking_relations["no_damage_to"]):
+            elif type_in_spec_list(
+                defending_type_name,
+                attacking_relations["no_damage_to"],
+            ):
                 effectiveness = TypeEffectiveness.IMMUNE
             else:
                 effectiveness = TypeEffectiveness.NORMAL
