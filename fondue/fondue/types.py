@@ -28,7 +28,7 @@ def get_pokemon_types(pokemon: PokemonInfo, game: GameInfo) -> list[TypeSpecRefe
     logger.debug("Getting latest Pokémon types for %s", pokemon["name"])
 
     types = pokemon["types"]
-    largest_override: tuple[int, list[TypeSpecReference]] | None = None
+    override: tuple[int, list[TypeSpecReference]] | None = None
 
     for past_types in pokemon["past_types"]:
         generation = fetch_generation(past_types["generation"]["name"])
@@ -38,17 +38,15 @@ def get_pokemon_types(pokemon: PokemonInfo, game: GameInfo) -> list[TypeSpecRefe
             continue
 
         # Otherwise, we set the override
-        # If there's no override, then set it
-        # Otherwise, only if it's larger
-        if largest_override is None or generation["id"] > largest_override[0]:
-            largest_override = (generation["id"], past_types["types"])
+        # We're looking for the largest generation in the past list
+        # to set as our override
+        # If there's no override, then always set it
+        if override is None or generation["id"] > override[0]:
+            override = (generation["id"], past_types["types"])
 
-    # We've checked all the types, now return the override if we found one
-    # or the latest types otherwise
-    if largest_override is None:
-        return types
+    if override is not None:
+        _, types = override
 
-    _, types = largest_override
     return types
 
 def group_pokemon_by_type(
