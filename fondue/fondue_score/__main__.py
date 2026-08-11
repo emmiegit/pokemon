@@ -81,7 +81,7 @@ if __name__ == "__main__":
     damage_length = max(len(DAMAGE_COLUMN), damage_digits)
     move_count_digits = digits(max(compl.move_count for compl in damage_compl))
     move_count_length = max(len(MOVE_COLUMN), move_count_digits)
-    mean_bst_digits = digits(max(mean_bst_by_type.values()))
+    mean_bst_digits = digits(max(mean_bst_by_type.values())) + 2
     mean_bst_length = max(len(BST_MEAN_COLUMN), mean_bst_digits)
     pokemon_count_digits = digits(max(len(bsts) for bsts in bsts_by_type.values())) + 1
     pokemon_count_length = max(len(POKEMON_COLUMN), pokemon_count_digits)
@@ -115,9 +115,8 @@ if __name__ == "__main__":
     for compl, bst_damage_total in zip(damage_compl, bst_damage_totals):
         bsts = bsts_by_type[compl.type]
         mean_bst = sum(bsts) / len(bsts)
-        mean_bst_str = str(int(mean_bst))
         pokemon_count = len(bsts)
         type_name = compl.type.upper()
         print(
-            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {mean_bst_str.center(mean_bst_length)} {pokemon_count:{pokemon_count_length}}"
+            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {mean_bst:{mean_bst_length}.1f} {pokemon_count:{pokemon_count_length}}"
         )
