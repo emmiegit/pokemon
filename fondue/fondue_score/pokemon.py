@@ -36,13 +36,14 @@ def fetch_all_pokemon(
     all_pokemon = []
     for species in all_species:
         for variety in species["varieties"]:
-            logger.info("Fetching Pokémon %s", variety["pokemon"]["name"])
+            logger.debug("Fetching Pokémon %s", variety["pokemon"]["name"])
             pokemon = fetch_pokemon(variety["pokemon"]["url"])
             if any_pokemon_form_valid(pokemon["forms"], game):
                 # At least one of these forms should be valid
                 # for the game being played. If not, it must
                 # be something like a mega-evolution in an
                 # older generation.
+                logger.info("Added Pokémon %s to the list", variety["pokemon"]["name"])
                 all_pokemon.append(pokemon)
     return all_pokemon
 
