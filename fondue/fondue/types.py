@@ -20,8 +20,17 @@ logger = logging.getLogger(__name__)
 class TypeEffectiveness(Enum):
     NORMAL = 1.0
     SUPEREFFECTIVE = 2.0
+    QUAD_EFFECTIVE = 4.0
     RESISTED = 0.5
+    DOUBLE_RESISTED = 0.25
     IMMUNE = 0.0
+
+    def __add__(self, other) -> TypeEffectiveness:
+        new_value = self.value * other.value
+        return TypeEffectiveness(new_value)
+
+    def __mul__(self, other) -> TypeEffectiveness:
+        return self + other
 
 
 # {type_name: [pokemon]}
