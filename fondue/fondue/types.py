@@ -1,12 +1,22 @@
 import logging
 from collections import defaultdict
 from collections.abc import Iterable
+from enum import Enum, unique
 
 from .api import fetch_generation, fetch_type
 from .api_types import DamageRelationInfo, PokemonInfo, TypeInfo, TypeSpecReference
 from .game import GameInfo
 
 logger = logging.getLogger(__name__)
+
+
+@unique
+class TypeEffectiveness(Enum):
+    NORMAL = 1.0
+    SUPEREFFECTIVE = 2.0
+    RESISTED = 0.5
+    IMMUNE = 0.0
+
 
 # {type_name: [pokemon]}
 PokemonByType = dict[str, list[PokemonInfo]]
