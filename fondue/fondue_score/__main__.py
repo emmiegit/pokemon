@@ -18,7 +18,8 @@ TYPE_COLUMN: Final[str] = "TYPE"
 SCORE_COLUMN: Final[str] = "SCORE"
 DAMAGE_COLUMN: Final[str] = "DAMAGE"
 MOVE_COLUMN: Final[str] = "MOVES"
-BST_MEAN_COLUMN: Final[str] = "AVG BST"
+BST_MEAN_COLUMN: Final[str] = "AVG-BST"
+POKEMON_COLUMN: Final[str] = "PKMN"
 
 
 def digits(n: float) -> int:
@@ -82,6 +83,8 @@ if __name__ == "__main__":
     move_count_length = max(len(MOVE_COLUMN), move_count_digits)
     mean_bst_digits = digits(max(mean_bst_by_type.values()))
     mean_bst_length = max(len(BST_MEAN_COLUMN), mean_bst_digits)
+    pokemon_count_digits = digits(max(len(bsts) for bsts in bsts_by_type.values())) + 1
+    pokemon_count_length = max(len(POKEMON_COLUMN), pokemon_count_digits)
 
     print(
         " ".join(
@@ -91,6 +94,7 @@ if __name__ == "__main__":
                 DAMAGE_COLUMN.center(damage_length),
                 MOVE_COLUMN.center(move_count_length),
                 BST_MEAN_COLUMN.center(mean_bst_length),
+                POKEMON_COLUMN.center(pokemon_count_length),
             )
         )
     )
@@ -102,7 +106,8 @@ if __name__ == "__main__":
             + damage_length
             + move_count_length
             + mean_bst_length
-            + 5
+            + pokemon_count_length
+            + 6
         )
     )
 
@@ -111,7 +116,8 @@ if __name__ == "__main__":
         bsts = bsts_by_type[compl.type]
         mean_bst = sum(bsts) / len(bsts)
         mean_bst_str = str(int(mean_bst))
+        pokemon_count = len(bsts)
         type_name = compl.type.upper()
         print(
-            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {mean_bst_str.center(mean_bst_length)}"
+            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {mean_bst_str.center(mean_bst_length)} {pokemon_count:{pokemon_count_length}}"
         )
