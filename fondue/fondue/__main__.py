@@ -86,6 +86,16 @@ if __name__ == "__main__":
     pokemon_count_digits = digits(max(len(bsts) for bsts in bsts_by_type.values())) + 1
     pokemon_count_length = max(len(POKEMON_COLUMN), pokemon_count_digits)
 
+    full_width = (
+        type_name_length
+        + bst_damage_length
+        + damage_length
+        + move_count_length
+        + mean_bst_length
+        + pokemon_count_length
+        + 6
+    )
+
     print(
         " ".join(
             (
@@ -98,18 +108,7 @@ if __name__ == "__main__":
             )
         )
     )
-    print(
-        "="
-        * (
-            type_name_length
-            + bst_damage_length
-            + damage_length
-            + move_count_length
-            + mean_bst_length
-            + pokemon_count_length
-            + 6
-        )
-    )
+    print("=" * full_width)
 
     # Each row of data
     for compl, bst_damage_total in zip(damage_compl, bst_damage_totals):
