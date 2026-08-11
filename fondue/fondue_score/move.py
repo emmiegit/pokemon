@@ -85,7 +85,10 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
     damage *= 1.0 + crit_chance
 
     # Flinch chance
-    # TODO
+    # 25% chance of an outspeed, combined with flinch% chance of a flinch,
+    # and flinches are free turns, so double damage
+    flinch_chance = meta["flinch_chance"] / 100
+    damage *= 1.0 + flinch_chance * 0.25
 
     # Evaluate multi-hit moves
     if meta["min_hits"] is not None and meta["max_hits"] is not None:
