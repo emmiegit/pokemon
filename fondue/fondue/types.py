@@ -7,6 +7,7 @@ from .game import GameInfo
 
 logger = logging.getLogger(__name__)
 
+# {type_name: [pokemon]}
 PokemonByType = dict[str, list[PokemonInfo]]
 
 
