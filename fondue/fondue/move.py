@@ -2,7 +2,8 @@ import logging
 from collections import defaultdict
 from typing import NamedTuple
 
-from .api import MoveInfo, fetch_machine, fetch_move_info
+from .api import fetch_machine, fetch_move_info
+from .api_types import MoveInfo
 from .crit import get_crit_chance
 from .game import GameInfo
 
