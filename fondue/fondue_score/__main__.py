@@ -1,6 +1,8 @@
 import argparse
 import logging
+import math
 import sys
+from typing import Final
 
 from .game import get_game_info
 from .move import calculate_damage_by_type, compile_moves_by_type
@@ -11,6 +13,16 @@ from .pokemon import (
 )
 from .stats import get_pokemon_stats_by_name
 from .types import group_pokemon_by_type
+
+TYPE_COLUMN: Final[str] = "TYPE"
+SCORE_COLUMN: Final[str] = "SCORE"
+DAMAGE_COLUMN: Final[str] = "DAMAGE"
+MOVE_COLUMN: Final[str] = "MOVES"
+
+
+def digits(n: float) -> int:
+    return math.ceil(math.log10(n + 1))
+
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser("Fondue Scorer")
@@ -55,11 +67,37 @@ if __name__ == "__main__":
     logger.info("Calculating damage for all moves in %s", game)
     moves_by_type = calculate_damage_by_type(game)
     damage_compl = compile_moves_by_type(moves_by_type)
+    bst_damage_totals = [
+        mean_bst_by_type[compl.type] * compl.damage_total for compl in damage_compl
+    ]
 
     # Display the results in a nice way
-    max_type_name_length = max(len(stat.type) for stat in damage_compl)
-    for compl in damage_compl:
+    type_name_length = max(len(stat.type) for stat in damage_compl) + 2
+    bst_damage_digits = digits(max(bst_damage_totals)) + 3
+    bst_damage_length = max(len(SCORE_COLUMN), bst_damage_digits)
+    damage_digits = digits(max(compl.damage_total for compl in damage_compl)) + 3
+    damage_length = max(len(DAMAGE_COLUMN), damage_digits)
+    move_count_digits = digits(max(compl.move_count for compl in damage_compl))
+    move_count_length = max(len(MOVE_COLUMN), move_count_digits)
+
+    print(
+        " ".join(
+            (
+                TYPE_COLUMN.center(type_name_length),
+                SCORE_COLUMN.center(bst_damage_length),
+                DAMAGE_COLUMN.center(damage_length),
+                MOVE_COLUMN.center(move_count_length),
+            )
+        )
+    )
+    print(
+        "="
+        * (type_name_length + bst_damage_length + damage_length + move_count_length + 4)
+    )
+
+    # Each row of data
+    for compl, bst_damage_total in zip(damage_compl, bst_damage_totals):
         type_name = compl.type.upper()
         print(
-            f"{type_name:{max_type_name_length}} {compl.damage_total:.2f} ({compl.move_count} moves)"
+            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}}"
         )
