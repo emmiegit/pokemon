@@ -141,3 +141,16 @@ class PokemonSpeciesInfo(TypedDict):
     is_baby: bool
     is_legendary: bool
     is_mythical: bool
+
+
+class PokemonFormInfo(TypedDict):
+    id: int
+    name: str
+    form_name: str
+    order: int
+    is_default: bool
+    is_battle_only: bool
+    is_mega: bool
+    pokemon: SpecReference
+    types: list[TypeSpecReference]
+    version_group: SpecReference

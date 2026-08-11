@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     logger.info("Fetching Pokémon information for %s", game)
     all_species = fetch_all_pokemon_species(game)
-    all_pokemon = fetch_all_pokemon(all_species)
+    all_pokemon = fetch_all_pokemon(all_species, game)
 
     logger.info("Organizing Pokémon by type and stats")
     pokemon_stats = get_pokemon_stats_by_name(all_pokemon, game)

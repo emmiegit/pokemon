@@ -9,6 +9,7 @@ from .api_types import (
     GenerationInfo,
     MachineInfo,
     MoveInfo,
+    PokemonFormInfo,
     PokemonInfo,
     PokemonSpeciesInfo,
     VersionGroupInfo,
@@ -97,3 +98,9 @@ def fetch_pokemon_species(url: str) -> PokemonSpeciesInfo:
     assert "/pokemon-species/" in url
     data = pokeapi_request(url)
     return cast(PokemonSpeciesInfo, data)
+
+
+def fetch_pokemon_form(url: str) -> PokemonFormInfo:
+    assert "/pokemon-form/" in url
+    data = pokeapi_request(url)
+    return cast(PokemonFormInfo, data)
