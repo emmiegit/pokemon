@@ -22,6 +22,8 @@ def _map_version_group_name(value: str) -> str:
             return "heartgold-soulsilver"
         case "plat":
             return "platinum"
+        case "dp" | "diamond" | "pearl":
+            return "diamond-pearl"
         case _:
             return value
 
