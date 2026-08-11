@@ -18,6 +18,9 @@ TYPE_COLUMN: Final[str] = "TYPE"
 SCORE_COLUMN: Final[str] = "SCORE"
 DAMAGE_COLUMN: Final[str] = "DAMAGE"
 MOVE_COLUMN: Final[str] = "MOVES"
+BST_MAX_COLUMN: Final[str] = "MAX BST"
+BST_MEAN_COLUMN: Final[str] = "AVG BST"
+BST_MIN_COLUMN: Final[str] = "MIN BST"
 
 
 def digits(n: float) -> int:
@@ -79,6 +82,12 @@ if __name__ == "__main__":
     damage_length = max(len(DAMAGE_COLUMN), damage_digits)
     move_count_digits = digits(max(compl.move_count for compl in damage_compl))
     move_count_length = max(len(MOVE_COLUMN), move_count_digits)
+    max_bst_digits = digits(max(max(bsts) for bsts in bsts_by_type.values())) + 2
+    max_bst_length = max(len(BST_MAX_COLUMN), max_bst_digits)
+    mean_bst_digits = digits(max(mean_bst_by_type.values())) + 2
+    mean_bst_length = max(len(BST_MEAN_COLUMN), mean_bst_digits)
+    min_bst_digits = digits(max(min(bsts) for bsts in bsts_by_type.values())) + 2
+    min_bst_length = max(len(BST_MIN_COLUMN), min_bst_digits)
 
     print(
         " ".join(
@@ -87,17 +96,33 @@ if __name__ == "__main__":
                 SCORE_COLUMN.center(bst_damage_length),
                 DAMAGE_COLUMN.center(damage_length),
                 MOVE_COLUMN.center(move_count_length),
+                BST_MIN_COLUMN.center(min_bst_length),
+                BST_MEAN_COLUMN.center(mean_bst_length),
+                BST_MAX_COLUMN.center(max_bst_length),
             )
         )
     )
     print(
         "="
-        * (type_name_length + bst_damage_length + damage_length + move_count_length + 4)
+        * (
+            type_name_length
+            + bst_damage_length
+            + damage_length
+            + move_count_length
+            + min_bst_length
+            + mean_bst_length
+            + max_bst_length
+            + 7
+        )
     )
 
     # Each row of data
     for compl, bst_damage_total in zip(damage_compl, bst_damage_totals):
+        bsts = bsts_by_type[compl.type]
+        max_bst = max(bsts)
+        min_bst = min(bsts)
+        mean_bst = sum(bsts) / len(bsts)
         type_name = compl.type.upper()
         print(
-            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}}"
+            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {min_bst:{min_bst_length}} {mean_bst:{mean_bst_length}.1f} {max_bst:{max_bst_length}}"
         )
