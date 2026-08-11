@@ -78,12 +78,29 @@ class MoveInfo(TypedDict):
     target: SpecReference
 
 
+class DamageRelationInfo(TypedDict):
+    double_damage_from: list[SpecReference]
+    double_damage_to: list[SpecReference]
+    half_damage_from: list[SpecReference]
+    half_damage_to: list[SpecReference]
+    no_damage_from: list[SpecReference]
+    no_damage_to: list[SpecReference]
+
+
+class PastDamageRelationInfo(TypedDict):
+    generation: SpecReference
+    damage_relations: DamageRelationInfo
+
+
 class TypeInfo(TypedDict):
     id: int
     name: str
     generation: SpecReference
     pokemon: list[SpecReference]
     moves: list[SpecReference]
+    move_damage_class: SpecReference
+    damage_relations: DamageRelationInfo
+    past_damage_relations: list[PastDamageRelationInfo]
 
 
 class StatInfo(TypedDict):
