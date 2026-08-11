@@ -14,6 +14,9 @@ from .pokemon import (
 from .stats import get_pokemon_stats_by_name
 from .types import group_pokemon_by_type
 
+OFFENSE_TITLE: Final[str] = "OFFENSE"
+DEFENSE_TITLE: Final[str] = "DEFENSE"
+
 TYPE_COLUMN: Final[str] = "TYPE"
 SCORE_COLUMN: Final[str] = "SCORE"
 DAMAGE_COLUMN: Final[str] = "DAMAGE"
@@ -96,6 +99,8 @@ if __name__ == "__main__":
         + 6
     )
 
+    print(OFFENSE_TITLE.center(full_width))
+    print()
     print(
         " ".join(
             (
@@ -110,7 +115,6 @@ if __name__ == "__main__":
     )
     print("=" * full_width)
 
-    # Each row of data
     for compl, bst_damage_total in zip(damage_compl, bst_damage_totals):
         bsts = bsts_by_type[compl.type]
         mean_bst = sum(bsts) / len(bsts)
@@ -119,3 +123,9 @@ if __name__ == "__main__":
         print(
             f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {mean_bst:{mean_bst_length}.1f} {pokemon_count:{pokemon_count_length}}"
         )
+
+    print()
+    print()
+    print(DEFENSE_TITLE.center(full_width))
+    print()
+    print("TODO")
