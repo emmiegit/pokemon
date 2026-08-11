@@ -62,6 +62,13 @@ def fetch_all_types(game: GameInfo) -> list[TypeInfo]:
     return types
 
 
+def type_in_spec_list(type_name: str, type_specs: Iterable[SpecReference]) -> bool:
+    for type_spec in type_specs:
+        if type_spec["name"] == type_name:
+            return True
+    return False
+
+
 def get_type_damage_relations(p_type: TypeInfo, game: GameInfo) -> DamageRelationInfo:
     logger.debug("Getting latest Pokémon type damage relations for %s", p_type["name"])
 
@@ -81,6 +88,27 @@ def get_type_damage_relations(p_type: TypeInfo, game: GameInfo) -> DamageRelatio
         _, relations = override
 
     return relations
+
+
+def get_type_damage_matrix(all_types: list[TypeInfo], game: GameInfo) -> TypeEffectivenessMatrix:
+    matrix: TypeEffectivenessMatrix = {}
+    for attacking_type in all_types:
+        attacking_type_name = attacking_type["name"]
+        attacking_relations = get_type_damage_relations(attacking_type, game)
+        for defending_type in all_types:
+            defending_type_name = defending_type["name"]
+
+            if type_in_spec_list(defending_type_name, attacking_relations["double_damage_to"]):
+                effectiveness = TypeEffectiveness.SUPEREFFECTIVE
+            elif type_in_spec_list(defending_type_name, attacking_relations["half_damage_to"]):
+                effectiveness = TypeEffectiveness.RESISTED
+            elif type_in_spec_list(defending_type_name, attacking_relations["no_damage_to"]):
+                effectiveness = TypeEffectiveness.IMMUNE
+            else:
+                effectiveness = TypeEffectiveness.NORMAL
+
+            matrix[(attacking_type_name, defending_type_name)] = effectiveness
+    return matrix
 
 
 def group_pokemon_by_type(
