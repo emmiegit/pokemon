@@ -82,11 +82,11 @@ if __name__ == "__main__":
     damage_length = max(len(DAMAGE_COLUMN), damage_digits)
     move_count_digits = digits(max(compl.move_count for compl in damage_compl))
     move_count_length = max(len(MOVE_COLUMN), move_count_digits)
-    max_bst_digits = digits(max(max(bsts) for bsts in bsts_by_type.values())) + 2
+    max_bst_digits = digits(max(max(bsts) for bsts in bsts_by_type.values()))
     max_bst_length = max(len(BST_MAX_COLUMN), max_bst_digits)
-    mean_bst_digits = digits(max(mean_bst_by_type.values())) + 2
+    mean_bst_digits = digits(max(mean_bst_by_type.values()))
     mean_bst_length = max(len(BST_MEAN_COLUMN), mean_bst_digits)
-    min_bst_digits = digits(max(min(bsts) for bsts in bsts_by_type.values())) + 2
+    min_bst_digits = digits(max(min(bsts) for bsts in bsts_by_type.values()))
     min_bst_length = max(len(BST_MIN_COLUMN), min_bst_digits)
 
     print(
@@ -124,5 +124,5 @@ if __name__ == "__main__":
         mean_bst = sum(bsts) / len(bsts)
         type_name = compl.type.upper()
         print(
-            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {min_bst:{min_bst_length}} {mean_bst:{mean_bst_length}.1f} {max_bst:{max_bst_length}}"
+            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {min_bst:{min_bst_length}} {mean_bst:{mean_bst_length}.0f} {max_bst:{max_bst_length}}"
         )
