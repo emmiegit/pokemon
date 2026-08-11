@@ -107,15 +107,19 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
     return damage
 
 
-def calculate_damage_by_type(game: GameInfo) -> MoveDamageByType:
+def calculate_damage_by_type(game: GameInfo, exclude_shadow: bool = True) -> MoveDamageByType:
     moves_by_type: MoveDamageByType = defaultdict(dict)
     for move_spec in game.all_moves():
         move = fetch_move_info(move_spec["url"])
         move_name = move["name"]
         move_type = move["type"]["name"]
+        if exclude_shadow and move_type == "shadow":
+            # Exclude annoying "shadow" moves from those weird games
+            continue
+
         damage = calculate_damage(move, game)
         if damage is None:
-            # Exclude from list
+            # This move has been deemed N/A for calculations
             continue
 
         moves_by_type[move_type][move_name] = damage
