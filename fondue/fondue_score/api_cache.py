@@ -1,3 +1,4 @@
+import gzip
 import json
 import logging
 import os
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def get_cache_path(request_path: str) -> str:
     request_path = request_path.strip("/")
-    file_name = request_path.replace("/", ".") + ".json"
+    file_name = request_path.replace("/", ".") + ".json.gz"
     return os.path.join(API_CACHE_DIRECTORY, file_name)
 
 
@@ -24,7 +25,7 @@ def cache_load(file_path: str) -> dict[str, Any]:
         raise RuntimeError("API caching is not enabled")
 
     logger.debug("Loading request data from cache file %s", file_path)
-    with open(file_path) as file:
+    with gzip.open(file_path, "rt") as file:
         return json.load(file)
 
 
@@ -34,5 +35,5 @@ def cache_store(file_path: str, data: dict[str, Any]) -> None:
 
     logger.debug("Storing request data to cache file %s", file_path)
     os.makedirs(API_CACHE_DIRECTORY, exist_ok=True)
-    with open(file_path, "w") as file:
+    with gzip.open(file_path, "wt") as file:
         json.dump(data, file)
