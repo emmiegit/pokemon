@@ -25,11 +25,11 @@ class TypeEffectiveness(Enum):
     DOUBLE_RESISTED = 0.25
     IMMUNE = 0.0
 
-    def __add__(self, other) -> TypeEffectiveness:
+    def __add__(self, other) -> "TypeEffectiveness":
         new_value = self.value * other.value
         return TypeEffectiveness(new_value)
 
-    def __mul__(self, other) -> TypeEffectiveness:
+    def __mul__(self, other) -> "TypeEffectiveness":
         return self + other
 
 
