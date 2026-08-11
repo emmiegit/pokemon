@@ -32,6 +32,12 @@ def digits(n: float) -> int:
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser("Fondue Scorer")
     argparser.add_argument(
+        "-E",
+        "--fully-evolved",
+        action="store_true",
+        help="Only consider fully-evolved Pokémon",
+    )
+    argparser.add_argument(
         "-v",
         "--verbose",
         default=0,
@@ -58,7 +64,7 @@ if __name__ == "__main__":
     game = get_game_info(args.game)
 
     logger.info("Fetching Pokémon information for %s", game)
-    all_species = fetch_all_pokemon_species(game)
+    all_species = fetch_all_pokemon_species(game, fully_evolved_only=args.fully_evolved)
     all_pokemon = fetch_all_pokemon(all_species, game)
 
     logger.info("Organizing Pokémon by type and stats")

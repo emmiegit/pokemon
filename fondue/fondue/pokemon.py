@@ -17,9 +17,14 @@ logger = logging.getLogger(__name__)
 PokemonBaseStatTotalsByType = dict[str, list[int]]
 
 
-def fetch_all_pokemon_species(game: GameInfo) -> list[PokemonSpeciesInfo]:
+def fetch_all_pokemon_species(
+    game: GameInfo,
+    fully_evolved_only: bool = False,
+) -> list[PokemonSpeciesInfo]:
     logger.info("Fetching all Pokémon species")
     all_species = []
+    if fully_evolved_only:
+        raise NotImplementedError
     for generation in game.generations:
         for species_spec in generation["pokemon_species"]:
             logger.info("Fetching Pokémon species %s", species_spec["name"])
