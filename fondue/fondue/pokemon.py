@@ -2,12 +2,14 @@ import logging
 from collections.abc import Iterable
 
 from .api import (
+    fetch_evolution_chain,
     fetch_pokemon,
     fetch_pokemon_form,
     fetch_pokemon_species,
     fetch_version_group,
 )
 from .api_types import PokemonInfo, PokemonSpeciesInfo, SpecReference
+from .evolution import is_fully_evolved
 from .game import GameInfo
 from .stats import CurrentPokemonStats, get_base_stat_total
 from .types import PokemonByType
@@ -23,12 +25,17 @@ def fetch_all_pokemon_species(
 ) -> list[PokemonSpeciesInfo]:
     logger.info("Fetching all Pokémon species")
     all_species = []
-    if fully_evolved_only:
-        raise NotImplementedError
     for generation in game.generations:
         for species_spec in generation["pokemon_species"]:
             logger.info("Fetching Pokémon species %s", species_spec["name"])
             species = fetch_pokemon_species(species_spec["url"])
+
+            # Perform the evolution chain check
+            if fully_evolved_only:
+                chain = fetch_evolution_chain(species["evolution_chain"]["url"])
+                if not is_fully_evolved(species_spec["name"], chain):
+                    continue
+
             all_species.append(species)
     return all_species
 
