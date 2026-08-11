@@ -20,6 +20,8 @@ class TypeEffectiveness(Enum):
 
 # {type_name: [pokemon]}
 PokemonByType = dict[str, list[PokemonInfo]]
+# {(attacking_type_name, defending_type_name): TypeEffectiveness}
+TypeEffectivenessMatrix = dict[tuple[str, str], TypeEffectiveness]
 
 
 def get_pokemon_types(pokemon: PokemonInfo, game: GameInfo) -> list[TypeSpecReference]:
