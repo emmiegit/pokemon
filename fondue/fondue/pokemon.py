@@ -27,15 +27,21 @@ def fetch_all_pokemon_species(
     all_species = []
     for generation in game.generations:
         for species_spec in generation["pokemon_species"]:
-            logger.info("Fetching Pokémon species %s", species_spec["name"])
+            species_name = species_spec["name"]
+            logger.debug("Fetching Pokémon species %s", species_name)
             species = fetch_pokemon_species(species_spec["url"])
 
             # Perform the evolution chain check
             if fully_evolved_only:
                 chain = fetch_evolution_chain(species["evolution_chain"]["url"])
-                if not is_fully_evolved(species_spec["name"], chain):
+                if not is_fully_evolved(species_name, chain):
+                    logger.debug(
+                        "Pokémon species %s excluded due to not being fully evolved",
+                        species_name,
+                    )
                     continue
 
+            logger.info("Added Pokémon species %s to the list", species_name)
             all_species.append(species)
     return all_species
 
