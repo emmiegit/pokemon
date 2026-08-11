@@ -75,7 +75,7 @@ if __name__ == "__main__":
     type_name_length = max(len(stat.type) for stat in damage_compl) + 2
     bst_damage_digits = digits(max(bst_damage_totals)) + 3
     bst_damage_length = max(len(SCORE_COLUMN), bst_damage_digits)
-    damage_digits = digits(max(compl.damage_total for compl in damage_compl)) + 3
+    damage_digits = digits(max(compl.damage_total for compl in damage_compl)) + 4
     damage_length = max(len(DAMAGE_COLUMN), damage_digits)
     move_count_digits = digits(max(compl.move_count for compl in damage_compl))
     move_count_length = max(len(MOVE_COLUMN), move_count_digits)
