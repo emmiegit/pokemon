@@ -54,6 +54,12 @@ class GameInfo(NamedTuple):
             moves.extend(gen["moves"])
         return moves
 
+    def all_types(self) -> list[SpecReference]:
+        types: list[SpecReference] = []
+        for gen in self.generations:
+            types.extend(gen["types"])
+        return types
+
     def all_species(self) -> list[SpecReference]:
         species: list[SpecReference] = []
         for gen in self.generations:
