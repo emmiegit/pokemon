@@ -171,3 +171,21 @@ class PokemonFormInfo(TypedDict):
     pokemon: SpecReference
     types: list[TypeSpecReference]
     version_group: SpecReference
+
+
+class EvolutionChainLink(TypedDict):
+    species: SpecReference
+    is_baby: bool
+    evolves_to: list["EvolutionChainLink"]
+
+
+class EvolutionChainInfo(TypedDict):
+    id: int
+    species: SpecReference
+    is_baby: bool
+    evolves_to: list[EvolutionChainLink]
+
+
+class EvolutionChainHead(TypedDict):
+    id: int
+    chain: EvolutionChainInfo

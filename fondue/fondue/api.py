@@ -5,6 +5,7 @@ import requests
 
 from .api_cache import cache_exists, cache_load, cache_store, get_cache_path
 from .api_types import (
+    EvolutionChainHead,
     GenerationInfo,
     MachineInfo,
     MoveInfo,
@@ -83,3 +84,9 @@ def fetch_pokemon_form(url: str) -> PokemonFormInfo:
     assert "/pokemon-form/" in url
     data = pokeapi_request(url)
     return cast(PokemonFormInfo, data)
+
+
+def fetch_evolution_chain(url: str) -> EvolutionChainHead:
+    assert "/evolution-chain/" in url
+    data = pokeapi_request(url)
+    return cast(EvolutionChainHead, data)
