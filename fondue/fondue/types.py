@@ -51,7 +51,7 @@ AllPokemonTypings = Mapping[PokemonTyping, int]
 class DefensiveCompilationForType(NamedTuple):
     typing: PokemonTyping
     recv_damage_total: float
-    bst_recv_damage_total: float
+    recv_bst_damage_total: float
     pokemon_count: int
 
 
@@ -222,7 +222,7 @@ def calculate_defensive_scores_by_pokemon_typings(
             DefensiveCompilationForType(
                 typing=defending_typing,
                 recv_damage_total=damage_total,
-                bst_recv_damage_total=bst_damage_total,
+                recv_bst_damage_total=bst_damage_total,
                 pokemon_count=pokemon_count,
             )
         )
