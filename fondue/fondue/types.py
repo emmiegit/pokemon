@@ -36,14 +36,24 @@ class TypeEffectiveness(Enum):
         return self + other
 
 
+# The types for one particular mon (always 1 or 2 long, but you know)
+# Order-insensitive checking for use as dict keys
+class PokemonTyping(tuple[str, ...]):
+    def __hash__(self) -> int:
+        return hash(frozenset(self))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, PokemonTyping):
+            return frozenset(self) == frozenset(other)
+
+        return False
+
+
 # {type_name: [pokemon]}
 PokemonByType = dict[str, list[PokemonInfo]]
 
 # {(attacking_type_name, defending_type_name): TypeEffectiveness}
 TypeEffectivenessMatrix = dict[tuple[str, str], TypeEffectiveness]
-
-# the types for one particular mon (always 1 or 2 long, but you know)
-PokemonTyping = tuple[str, ...]
 
 # all type combinations found across all pokemon in this game, with counts
 PokemonByTypings = Mapping[PokemonTyping, list[PokemonInfo]]
@@ -227,8 +237,8 @@ def group_pokemon_by_typings(
                 continue
 
         # we need to sort to avoid treating e.g. dark/ghost and ghost/dark as different typings
-        p_typing = tuple(
-            sorted(ty["type"]["name"] for ty in get_pokemon_types(pokemon, game))
+        p_typing = PokemonTyping(
+            tuple(ty["type"]["name"] for ty in get_pokemon_types(pokemon, game))
         )
         typings[p_typing].append(pokemon)
     return typings
