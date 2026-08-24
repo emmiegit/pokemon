@@ -5,7 +5,10 @@ from .api_types import EvolutionChainHead, EvolutionChainInfo, EvolutionChainLin
 logger = logging.getLogger(__name__)
 
 
-def is_fully_evolved(species_name: str, chain_head: EvolutionChainHead) -> bool:
+def is_fully_evolved(
+    species_name: str,
+    chain_head: EvolutionChainHead,
+) -> bool:
     chain = chain_head["chain"]
 
     # Species that never evolves
