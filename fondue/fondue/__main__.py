@@ -30,6 +30,8 @@ MOVE_COLUMN: Final[str] = "MOVES"
 BST_MEAN_COLUMN: Final[str] = "AVG-BST"
 POKEMON_COLUMN: Final[str] = "PKMN"
 
+SAMPLE_POKEMON_FOR_TYPE: Final[int] = 3
+
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser("Fondue Scorer")
@@ -176,4 +178,13 @@ if __name__ == "__main__":
     print()
     print(DEFENSE_TITLE.center(full_width))
     print()
-    print("TODO")
+
+    # TODO needs formatting
+    for def_compl in defense_compl:
+        typing_str = "/".join(ty.upper() for ty in def_compl.typing)
+        pokemon_str = ", ".join(
+            name.upper() for name in def_compl.pokemon_list[:SAMPLE_POKEMON_FOR_TYPE]
+        )
+        print(
+            f"{typing_str} {def_compl.recv_bst_damage_total:.1f} {def_compl.recv_damage_total:.1f} {pokemon_str}"
+        )
