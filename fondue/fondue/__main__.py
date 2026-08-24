@@ -69,11 +69,6 @@ if __name__ == "__main__":
     all_species = fetch_all_pokemon_species(game, fully_evolved_only=args.fully_evolved)
     all_pokemon = fetch_all_pokemon(all_species, game)
 
-    logger.info("Fetching Pokémon type information")
-    all_types = fetch_all_types(game)
-    pokemon_by_typings = group_pokemon_by_typings(all_pokemon, game)
-    type_matrix = get_type_damage_matrix(all_types, game)
-
     logger.info("Organizing Pokémon by type and stats")
     pokemon_stats = get_pokemon_stats_by_name(all_pokemon, game)
     pokemon_by_type = group_pokemon_by_type(all_pokemon, game)
@@ -84,6 +79,11 @@ if __name__ == "__main__":
     mean_bst_by_type = {
         type_name: sum(bsts) / len(bsts) for type_name, bsts in bsts_by_type.items()
     }
+
+    logger.info("Fetching Pokémon type information")
+    all_types = fetch_all_types(game)
+    pokemon_by_typings = group_pokemon_by_typings(all_pokemon, game)
+    type_matrix = get_type_damage_matrix(all_types, game)
 
     logger.info("Calculating damage for all moves in %s", game)
     moves_by_type = calculate_damage_by_type(game)
