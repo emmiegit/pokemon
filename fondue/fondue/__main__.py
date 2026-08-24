@@ -1,10 +1,15 @@
 import argparse
 import logging
 import sys
+from collections.abc import Sequence
 from typing import Final
 
 from .game import get_game_info
-from .move import calculate_damage_by_type, compile_moves_by_type
+from .move import (
+    MoveCompilationForType,
+    calculate_damage_by_type,
+    compile_moves_by_type,
+)
 from .pokemon import (
     fetch_all_pokemon,
     fetch_all_pokemon_species,
@@ -12,6 +17,7 @@ from .pokemon import (
 )
 from .stats import get_pokemon_stats_by_name
 from .types import (
+    DefensiveCompilationForType,
     calculate_defensive_scores_by_pokemon_typings,
     fetch_all_types,
     get_type_damage_matrix,
@@ -31,6 +37,101 @@ BST_MEAN_COLUMN: Final[str] = "AVG-BST"
 POKEMON_COLUMN: Final[str] = "PKMN"
 
 SAMPLE_POKEMON_FOR_TYPE: Final[int] = 3
+
+
+def print_offense_results(damage_compl: Sequence[MoveCompilationForType]):
+    type_name_length = max(len(stat.type) for stat in damage_compl) + 2
+    bst_damage_digits = (
+        digits(max(compl.bst_damage_total for compl in damage_compl)) + 3
+    )
+    bst_damage_length = max(len(SCORE_COLUMN), bst_damage_digits)
+    damage_digits = digits(max(compl.damage_total for compl in damage_compl)) + 4
+    damage_length = max(len(DAMAGE_COLUMN), damage_digits)
+    move_count_digits = digits(max(compl.move_count for compl in damage_compl))
+    move_count_length = max(len(MOVE_COLUMN), move_count_digits)
+    mean_bst_digits = digits(max(mean_bst_by_type.values())) + 2
+    mean_bst_length = max(len(BST_MEAN_COLUMN), mean_bst_digits)
+    pokemon_count_digits = digits(max(len(bsts) for bsts in bsts_by_type.values())) + 1
+    pokemon_count_length = max(len(POKEMON_COLUMN), pokemon_count_digits)
+
+    full_width = (
+        type_name_length
+        + bst_damage_length
+        + damage_length
+        + move_count_length
+        + mean_bst_length
+        + pokemon_count_length
+        + 6
+    )
+
+    print(OFFENSE_TITLE.center(full_width))
+    print()
+    print(
+        " ".join(
+            (
+                TYPE_COLUMN.center(type_name_length),
+                SCORE_COLUMN.center(bst_damage_length),
+                DAMAGE_COLUMN.center(damage_length),
+                MOVE_COLUMN.center(move_count_length),
+                BST_MEAN_COLUMN.center(mean_bst_length),
+                POKEMON_COLUMN.center(pokemon_count_length),
+            )
+        )
+    )
+    print("=" * full_width)
+
+    for compl in damage_compl:
+        type_name = compl.type.upper()
+        print(
+            f"{type_name:{type_name_length}} {compl.bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {compl.mean_bst:{mean_bst_length}.1f} {compl.pokemon_count:{pokemon_count_length}}"
+        )
+
+
+def print_defense_results(defense_compl: Sequence[DefensiveCompilationForType]):
+    # Pre-cacluate pokemon lists for length calculations
+    pokemon_strings = []
+    for compl in defense_compl:
+        pokemon_list = compl.pokemon_list
+        if len(pokemon_list) > SAMPLE_POKEMON_FOR_TYPE:
+            pokemon_list = list(compl.pokemon_list[:SAMPLE_POKEMON_FOR_TYPE])
+            pokemon_list.append("...")
+
+        pokemon_strings.append(", ".join(name.upper() for name in pokemon_list))
+
+    typing_name_length = max(sum(map(len, compl.typing)) for compl in defense_compl) + 1
+    bst_damage_digits = (
+        digits(max(compl.recv_bst_damage_total for compl in defense_compl)) + 3
+    )
+    bst_damage_length = max(len(SCORE_COLUMN), bst_damage_digits)
+    damage_digits = digits(max(compl.recv_damage_total for compl in defense_compl)) + 4
+    damage_length = max(len(DAMAGE_COLUMN), damage_digits)
+    pokemon_length = max(map(len, pokemon_strings))
+
+    full_width = (
+        typing_name_length + bst_damage_length + damage_length + pokemon_length + 3
+    )
+
+    print()
+    print()
+    print(DEFENSE_TITLE.center(full_width))
+    print()
+    print(
+        " ".join(
+            (
+                TYPE_COLUMN.center(typing_name_length),
+                SCORE_COLUMN.center(bst_damage_length),
+                DAMAGE_COLUMN.center(damage_length),
+                POKEMON_COLUMN.center(pokemon_length),
+            )
+        )
+    )
+    print("=" * full_width)
+
+    for compl, pokemon_str in zip(defense_compl, pokemon_strings):
+        typing_str = "/".join(ty.upper() for ty in compl.typing)
+        print(
+            f"{typing_str:{typing_name_length}} {compl.recv_bst_damage_total:{bst_damage_length}.1f} {compl.recv_damage_total:{damage_length}.1f} {pokemon_str}"
+        )
 
 
 if __name__ == "__main__":
@@ -118,6 +219,7 @@ if __name__ == "__main__":
         mean_bst_by_type,
         pokemon_counts_by_type,
     )
+    print_offense_results(damage_compl)
 
     logger.info("Calculating defensive typing for all Pokémon types")
     defense_compl = calculate_defensive_scores_by_pokemon_typings(
@@ -126,97 +228,4 @@ if __name__ == "__main__":
         pokemon_by_typings,
         pokemon_stats,
     )
-
-    # Display the results in a nice way
-    type_name_length = max(len(stat.type) for stat in damage_compl) + 2
-    bst_damage_digits = (
-        digits(max(compl.bst_damage_total for compl in damage_compl)) + 3
-    )
-    bst_damage_length = max(len(SCORE_COLUMN), bst_damage_digits)
-    damage_digits = digits(max(compl.damage_total for compl in damage_compl)) + 4
-    damage_length = max(len(DAMAGE_COLUMN), damage_digits)
-    move_count_digits = digits(max(compl.move_count for compl in damage_compl))
-    move_count_length = max(len(MOVE_COLUMN), move_count_digits)
-    mean_bst_digits = digits(max(mean_bst_by_type.values())) + 2
-    mean_bst_length = max(len(BST_MEAN_COLUMN), mean_bst_digits)
-    pokemon_count_digits = digits(max(len(bsts) for bsts in bsts_by_type.values())) + 1
-    pokemon_count_length = max(len(POKEMON_COLUMN), pokemon_count_digits)
-
-    full_width = (
-        type_name_length
-        + bst_damage_length
-        + damage_length
-        + move_count_length
-        + mean_bst_length
-        + pokemon_count_length
-        + 6
-    )
-
-    print(OFFENSE_TITLE.center(full_width))
-    print()
-    print(
-        " ".join(
-            (
-                TYPE_COLUMN.center(type_name_length),
-                SCORE_COLUMN.center(bst_damage_length),
-                DAMAGE_COLUMN.center(damage_length),
-                MOVE_COLUMN.center(move_count_length),
-                BST_MEAN_COLUMN.center(mean_bst_length),
-                POKEMON_COLUMN.center(pokemon_count_length),
-            )
-        )
-    )
-    print("=" * full_width)
-
-    for dmg_compl in damage_compl:
-        type_name = dmg_compl.type.upper()
-        print(
-            f"{type_name:{type_name_length}} {dmg_compl.bst_damage_total:{bst_damage_length}.1f} {dmg_compl.damage_total:{damage_length}.2f} {dmg_compl.move_count:{move_count_length}} {dmg_compl.mean_bst:{mean_bst_length}.1f} {dmg_compl.pokemon_count:{pokemon_count_length}}"
-        )
-
-    # Display results in a nice way
-
-    # Pre-cacluate pokemon lists for length calculations
-    pokemon_strings = []
-    for def_compl in defense_compl:
-        pokemon_list = def_compl.pokemon_list
-        if len(pokemon_list) > SAMPLE_POKEMON_FOR_TYPE:
-            pokemon_list = list(def_compl.pokemon_list[:SAMPLE_POKEMON_FOR_TYPE])
-            pokemon_list.append("...")
-
-        pokemon_strings.append(", ".join(name.upper() for name in pokemon_list))
-
-    typing_name_length = max(sum(map(len, compl.typing)) for compl in defense_compl) + 1
-    bst_damage_digits = (
-        digits(max(compl.recv_bst_damage_total for compl in defense_compl)) + 3
-    )
-    bst_damage_length = max(len(SCORE_COLUMN), bst_damage_digits)
-    damage_digits = digits(max(compl.recv_damage_total for compl in defense_compl)) + 4
-    damage_length = max(len(DAMAGE_COLUMN), damage_digits)
-    pokemon_length = max(map(len, pokemon_strings))
-
-    full_width = (
-        typing_name_length + bst_damage_length + damage_length + pokemon_length + 3
-    )
-
-    print()
-    print()
-    print(DEFENSE_TITLE.center(full_width))
-    print()
-    print(
-        " ".join(
-            (
-                TYPE_COLUMN.center(typing_name_length),
-                SCORE_COLUMN.center(bst_damage_length),
-                DAMAGE_COLUMN.center(damage_length),
-                POKEMON_COLUMN.center(pokemon_length),
-            )
-        )
-    )
-    print("=" * full_width)
-
-    for def_compl, pokemon_str in zip(defense_compl, pokemon_strings):
-        typing_str = "/".join(ty.upper() for ty in def_compl.typing)
-        print(
-            f"{typing_str:{typing_name_length}} {def_compl.recv_bst_damage_total:{bst_damage_length}.1f} {def_compl.recv_damage_total:{damage_length}.1f} {pokemon_str}"
-        )
+    print_defense_results(defense_compl)
