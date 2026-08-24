@@ -1,6 +1,5 @@
 import argparse
 import logging
-import math
 import sys
 from typing import Final
 
@@ -19,6 +18,7 @@ from .types import (
     get_unique_pokemon_typings,
     group_pokemon_by_type,
 )
+from .util import digits
 
 OFFENSE_TITLE: Final[str] = "OFFENSE"
 DEFENSE_TITLE: Final[str] = "DEFENSE"
@@ -29,10 +29,6 @@ DAMAGE_COLUMN: Final[str] = "DAMAGE"
 MOVE_COLUMN: Final[str] = "MOVES"
 BST_MEAN_COLUMN: Final[str] = "AVG-BST"
 POKEMON_COLUMN: Final[str] = "PKMN"
-
-
-def digits(n: float) -> int:
-    return math.ceil(math.log10(n + 1))
 
 
 if __name__ == "__main__":
