@@ -226,4 +226,5 @@ def calculate_defensive_scores_by_pokemon_typings(
                 pokemon_count=pokemon_count,
             )
         )
+    defense_by_type.sort(key=lambda compl: compl.recv_bst_damage_total)
     return defense_by_type
