@@ -238,6 +238,7 @@ def calculate_defensive_scores_by_pokemon_typings(
     damage_compl: Sequence[MoveCompilationForType],
     matrix: TypeEffectivenessMatrix,
     pokemon_by_typings: PokemonByTypings,
+    stats_by_name: Mapping[str, CurrentPokemonStats],
 ) -> list[DefensiveCompilationForType]:
     logger.info("Calculating defensive scores by type...")
     defense_by_type = []
@@ -260,7 +261,11 @@ def calculate_defensive_scores_by_pokemon_typings(
                 typing=defending_typing,
                 recv_damage_total=damage_total,
                 recv_bst_damage_total=bst_damage_total,
-                pokemon_list=[pkmn["name"] for pkmn in pokemon_list],
+                pokemon_list=sorted(
+                    (pkmn["name"] for pkmn in pokemon_list),
+                    key=lambda name: get_base_stat_total(stats_by_name[name]),
+                    reverse=True,
+                ),
             )
         )
     defense_by_type.sort(key=lambda compl: compl.recv_bst_damage_total)

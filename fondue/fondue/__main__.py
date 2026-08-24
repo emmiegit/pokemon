@@ -122,6 +122,7 @@ if __name__ == "__main__":
         damage_compl,
         type_matrix,
         pokemon_by_typings,
+        pokemon_stats,
     )
 
     # Display the results in a nice way
