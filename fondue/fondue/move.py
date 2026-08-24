@@ -1,5 +1,6 @@
 import logging
 from collections import defaultdict
+from collections.abc import Mapping
 from typing import NamedTuple
 
 from .api import fetch_machine, fetch_move_info
@@ -27,8 +28,28 @@ logger = logging.getLogger(__name__)
 
 class MoveCompilationForType(NamedTuple):
     type: str
+    mean_bst: float
     damage_total: float
+    bst_damage_total: float
+    pokemon_count: int
     move_count: int
+
+    @staticmethod
+    def make(
+        move_type: str,
+        moves: Mapping[str, float],
+        mean_bst: float,
+        pokemon_count: int,
+    ) -> "MoveCompilationForType":
+        damage_total = sum(moves.values())
+        return MoveCompilationForType(
+            type=move_type,
+            mean_bst=mean_bst,
+            damage_total=damage_total,
+            bst_damage_total=damage_total * mean_bst,
+            pokemon_count=pokemon_count,
+            move_count=len(moves),
+        )
 
 
 def move_is_hm(move: MoveInfo, game: GameInfo) -> bool:
@@ -131,13 +152,16 @@ def calculate_damage_by_type(
 
 def compile_moves_by_type(
     moves_by_type: MoveDamageByType,
+    mean_bsts_by_type: Mapping[str, float],
+    pokemon_counts_by_type: Mapping[str, int],
 ) -> list[MoveCompilationForType]:
     logger.debug("Organizing types by total damage from moves...")
     stats_by_type = [
-        MoveCompilationForType(
-            type=move_type,
-            damage_total=sum(moves.values()),
-            move_count=len(moves),
+        MoveCompilationForType.make(
+            move_type,
+            moves,
+            mean_bsts_by_type[move_type],
+            pokemon_counts_by_type[move_type],
         )
         for move_type, moves in moves_by_type.items()
     ]

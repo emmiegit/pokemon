@@ -71,20 +71,26 @@ if __name__ == "__main__":
     pokemon_stats = get_pokemon_stats_by_name(all_pokemon, game)
     pokemon_by_type = group_pokemon_by_type(all_pokemon, game)
     bsts_by_type = get_pokemon_bsts_by_type(pokemon_stats, pokemon_by_type)
+    pokemon_counts_by_type = {
+        type_name: len(bsts) for type_name, bsts in bsts_by_type.items()
+    }
     mean_bst_by_type = {
         type_name: sum(bsts) / len(bsts) for type_name, bsts in bsts_by_type.items()
     }
 
     logger.info("Calculating damage for all moves in %s", game)
     moves_by_type = calculate_damage_by_type(game)
-    damage_compl = compile_moves_by_type(moves_by_type)
-    bst_damage_totals = [
-        mean_bst_by_type[compl.type] * compl.damage_total for compl in damage_compl
-    ]
+    damage_compl = compile_moves_by_type(
+        moves_by_type,
+        mean_bst_by_type,
+        pokemon_counts_by_type,
+    )
 
     # Display the results in a nice way
     type_name_length = max(len(stat.type) for stat in damage_compl) + 2
-    bst_damage_digits = digits(max(bst_damage_totals)) + 3
+    bst_damage_digits = (
+        digits(max(compl.bst_damage_total for compl in damage_compl)) + 3
+    )
     bst_damage_length = max(len(SCORE_COLUMN), bst_damage_digits)
     damage_digits = digits(max(compl.damage_total for compl in damage_compl)) + 4
     damage_length = max(len(DAMAGE_COLUMN), damage_digits)
@@ -121,13 +127,10 @@ if __name__ == "__main__":
     )
     print("=" * full_width)
 
-    for compl, bst_damage_total in zip(damage_compl, bst_damage_totals):
-        bsts = bsts_by_type[compl.type]
-        mean_bst = sum(bsts) / len(bsts)
-        pokemon_count = len(bsts)
+    for compl in damage_compl:
         type_name = compl.type.upper()
         print(
-            f"{type_name:{type_name_length}} {bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {mean_bst:{mean_bst_length}.1f} {pokemon_count:{pokemon_count_length}}"
+            f"{type_name:{type_name_length}} {compl.bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {compl.mean_bst:{mean_bst_length}.1f} {compl.pokemon_count:{pokemon_count_length}}"
         )
 
     print()
