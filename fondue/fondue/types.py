@@ -192,7 +192,8 @@ def get_unique_pokemon_typings(
 ) -> AllPokemonTypings:
     typings: MutableMapping[PokemonTyping, int] = defaultdict(int)
     for pokemon in all_pokemon:
-        typing = tuple(ty["type"]["name"] for ty in get_pokemon_types(pokemon, game))
+        # we need to sort to avoid treating e.g. dark/ghost and ghost/dark as different typings
+        typing = tuple(sorted(ty["type"]["name"] for ty in get_pokemon_types(pokemon, game)))
         typings[typing] += 1
     return typings
 
