@@ -15,8 +15,8 @@ from .types import (
     calculate_defensive_scores_by_pokemon_typings,
     fetch_all_types,
     get_type_damage_matrix,
-    get_unique_pokemon_typings,
     group_pokemon_by_type,
+    group_pokemon_by_typings,
 )
 from .util import digits
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     logger.info("Fetching Pokémon type information")
     all_types = fetch_all_types(game)
-    all_pokemon_typings = get_unique_pokemon_typings(all_pokemon, game)
+    pokemon_by_typings = group_pokemon_by_typings(all_pokemon, game)
     type_matrix = get_type_damage_matrix(all_types, game)
 
     logger.info("Organizing Pokémon by type and stats")
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     defense_compl = calculate_defensive_scores_by_pokemon_typings(
         damage_compl,
         type_matrix,
-        all_pokemon_typings,
+        pokemon_by_typings,
     )
 
     # Display the results in a nice way
@@ -151,4 +151,5 @@ if __name__ == "__main__":
     print()
     print(DEFENSE_TITLE.center(full_width))
     print()
+    breakpoint()
     print("TODO")

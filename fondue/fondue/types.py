@@ -45,7 +45,7 @@ TypeEffectivenessMatrix = dict[tuple[str, str], TypeEffectiveness]
 PokemonTyping = tuple[str, ...]
 
 # all type combinations found across all pokemon in this game, with counts
-AllPokemonTypings = Mapping[PokemonTyping, int]
+PokemonByTypings = Mapping[PokemonTyping, list[PokemonInfo]]
 
 
 class DefensiveCompilationForType(NamedTuple):
@@ -186,26 +186,28 @@ def group_pokemon_by_type(
     return types
 
 
-def get_unique_pokemon_typings(
+def group_pokemon_by_typings(
     all_pokemon: Iterable[PokemonInfo],
     game: GameInfo,
-) -> AllPokemonTypings:
-    typings: MutableMapping[PokemonTyping, int] = defaultdict(int)
+) -> PokemonByTypings:
+    typings = defaultdict(list)
     for pokemon in all_pokemon:
         # we need to sort to avoid treating e.g. dark/ghost and ghost/dark as different typings
-        typing = tuple(sorted(ty["type"]["name"] for ty in get_pokemon_types(pokemon, game)))
-        typings[typing] += 1
+        p_typing = tuple(
+            sorted(ty["type"]["name"] for ty in get_pokemon_types(pokemon, game))
+        )
+        typings[p_typing].append(pokemon)
     return typings
 
 
 def calculate_defensive_scores_by_pokemon_typings(
     damage_compl: Sequence[MoveCompilationForType],
     matrix: TypeEffectivenessMatrix,
-    all_pokemon_typings: AllPokemonTypings,
+    pokemon_by_typings: PokemonByTypings,
 ) -> list[DefensiveCompilationForType]:
     logger.info("Calculating defensive scores by type...")
     defense_by_type = []
-    for defending_typing, pokemon_count in all_pokemon_typings.items():
+    for defending_typing, pokemon_list in pokemon_by_typings.items():
         damage_total = 0.0
         bst_damage_total = 0.0
 
@@ -224,7 +226,7 @@ def calculate_defensive_scores_by_pokemon_typings(
                 typing=defending_typing,
                 recv_damage_total=damage_total,
                 recv_bst_damage_total=bst_damage_total,
-                pokemon_count=pokemon_count,
+                pokemon_count=len(pokemon_list),
             )
         )
     defense_by_type.sort(key=lambda compl: compl.recv_bst_damage_total)
