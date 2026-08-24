@@ -12,7 +12,13 @@ from .pokemon import (
     get_pokemon_bsts_by_type,
 )
 from .stats import get_pokemon_stats_by_name
-from .types import group_pokemon_by_type
+from .types import (
+    calculate_defensive_scores_by_pokemon_typings,
+    fetch_all_types,
+    get_type_damage_matrix,
+    get_unique_pokemon_typings,
+    group_pokemon_by_type,
+)
 
 OFFENSE_TITLE: Final[str] = "OFFENSE"
 DEFENSE_TITLE: Final[str] = "DEFENSE"
@@ -67,6 +73,11 @@ if __name__ == "__main__":
     all_species = fetch_all_pokemon_species(game, fully_evolved_only=args.fully_evolved)
     all_pokemon = fetch_all_pokemon(all_species, game)
 
+    logger.info("Fetching Pokémon type information")
+    all_types = fetch_all_types(game)
+    all_pokemon_typings = get_unique_pokemon_typings(all_pokemon)
+    type_matrix = get_type_damage_matrix(all_types, game)
+
     logger.info("Organizing Pokémon by type and stats")
     pokemon_stats = get_pokemon_stats_by_name(all_pokemon, game)
     pokemon_by_type = group_pokemon_by_type(all_pokemon, game)
@@ -84,6 +95,13 @@ if __name__ == "__main__":
         moves_by_type,
         mean_bst_by_type,
         pokemon_counts_by_type,
+    )
+
+    logger.info("Calculating defensive typing for all Pokémon types")
+    defense_compl = calculate_defensive_scores_by_pokemon_typings(
+        damage_compl,
+        type_matrix,
+        all_pokemon_typings,
     )
 
     # Display the results in a nice way

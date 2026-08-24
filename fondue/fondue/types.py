@@ -1,7 +1,8 @@
 import logging
 from collections import defaultdict
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping, MutableMapping, Sequence
 from enum import Enum, unique
+from typing import NamedTuple
 
 from .api import fetch_generation, fetch_type
 from .api_types import (
@@ -12,6 +13,7 @@ from .api_types import (
     TypeSpecReference,
 )
 from .game import GameInfo
+from .move import MoveCompilationForType
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +37,22 @@ class TypeEffectiveness(Enum):
 
 # {type_name: [pokemon]}
 PokemonByType = dict[str, list[PokemonInfo]]
+
 # {(attacking_type_name, defending_type_name): TypeEffectiveness}
 TypeEffectivenessMatrix = dict[tuple[str, str], TypeEffectiveness]
+
+# the types for one particular mon (always 1 or 2 long, but you know)
+PokemonTyping = tuple[str, ...]
+
+# all type combinations found across all pokemon in this game, with counts
+AllPokemonTypings = Mapping[PokemonTyping, int]
+
+
+class DefensiveCompilationForType(NamedTuple):
+    typing: PokemonTyping
+    recv_damage_total: float
+    bst_recv_damage_total: float
+    pokemon_count: int
 
 
 def get_pokemon_types(
@@ -147,6 +163,17 @@ def get_type_damage_matrix(
     return matrix
 
 
+def get_typing_effectiveness(
+    attacking_type: str,
+    defending_typing: PokemonTyping,
+    matrix: TypeEffectivenessMatrix,
+) -> TypeEffectiveness:
+    effectiveness = TypeEffectiveness.NORMAL
+    for defending_type in defending_typing:
+        effectiveness *= matrix[(attacking_type, defending_type)]
+    return effectiveness
+
+
 def group_pokemon_by_type(
     all_pokemon: Iterable[PokemonInfo],
     game: GameInfo,
@@ -157,3 +184,47 @@ def group_pokemon_by_type(
             p_type_name = p_type["type"]["name"]
             types[p_type_name].append(pokemon)
     return types
+
+
+def get_unique_pokemon_typings(all_pokemon: Iterable[PokemonInfo]) -> AllPokemonTypings:
+    # {"types": [{"type": {"name": <name>}}]}
+    def convert_types(pkmn: PokemonInfo) -> tuple[str, ...]:
+        return tuple(ty["type"]["name"] for ty in pkmn["types"])
+
+    # we could do frozenset() if we didn't want counts
+    typings: MutableMapping[PokemonTyping, int] = defaultdict(int)
+    for pokemon in all_pokemon:
+        typings[convert_types(pokemon)] += 1
+    return typings
+
+
+def calculate_defensive_scores_by_pokemon_typings(
+    damage_compl: Sequence[MoveCompilationForType],
+    matrix: TypeEffectivenessMatrix,
+    all_pokemon_typings: AllPokemonTypings,
+) -> list[DefensiveCompilationForType]:
+    logger.info("Calculating defensive scores by type...")
+    results = []
+    for defending_typing, pokemon_count in all_pokemon_typings.items():
+        damage_total = 0.0
+        bst_damage_total = 0.0
+
+        for compl in damage_compl:
+            attacking_type = compl.type
+            effectiveness = get_typing_effectiveness(
+                attacking_type,
+                defending_typing,
+                matrix,
+            )
+            damage_total += compl.damage_total * effectiveness.value
+            bst_damage_total += compl.bst_damage_total * effectiveness.value
+
+        results.append(
+            DefensiveCompilationForType(
+                typing=defending_typing,
+                recv_damage_total=damage_total,
+                bst_recv_damage_total=bst_damage_total,
+                pokemon_count=pokemon_count,
+            )
+        )
+    return results
