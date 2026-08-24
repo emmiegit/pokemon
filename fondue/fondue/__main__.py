@@ -174,17 +174,49 @@ if __name__ == "__main__":
             f"{type_name:{type_name_length}} {dmg_compl.bst_damage_total:{bst_damage_length}.1f} {dmg_compl.damage_total:{damage_length}.2f} {dmg_compl.move_count:{move_count_length}} {dmg_compl.mean_bst:{mean_bst_length}.1f} {dmg_compl.pokemon_count:{pokemon_count_length}}"
         )
 
+    # Display results in a nice way
+
+    # Pre-cacluate pokemon lists for length calculations
+    pokemon_strings = []
+    for def_compl in defense_compl:
+        pokemon_list = def_compl.pokemon_list
+        if len(pokemon_list) > SAMPLE_POKEMON_FOR_TYPE:
+            pokemon_list = def_compl.pokemon_list[:SAMPLE_POKEMON_FOR_TYPE]
+            pokemon_list.append("...")
+
+        pokemon_strings.append(", ".join(name.upper() for name in pokemon_list))
+
+    typing_name_length = max(sum(map(len, compl.typing)) for compl in defense_compl) + 1
+    bst_damage_digits = (
+        digits(max(compl.recv_bst_damage_total for compl in defense_compl)) + 3
+    )
+    bst_damage_length = max(len(SCORE_COLUMN), bst_damage_digits)
+    damage_digits = digits(max(compl.recv_damage_total for compl in defense_compl)) + 4
+    damage_length = max(len(DAMAGE_COLUMN), damage_digits)
+    pokemon_length = max(map(len, pokemon_strings))
+
+    full_width = (
+        typing_name_length + bst_damage_length + damage_length + pokemon_length + 3
+    )
+
     print()
     print()
     print(DEFENSE_TITLE.center(full_width))
     print()
-
-    # TODO needs formatting
-    for def_compl in defense_compl:
-        typing_str = "/".join(ty.upper() for ty in def_compl.typing)
-        pokemon_str = ", ".join(
-            name.upper() for name in def_compl.pokemon_list[:SAMPLE_POKEMON_FOR_TYPE]
+    print(
+        " ".join(
+            (
+                TYPE_COLUMN.center(typing_name_length),
+                SCORE_COLUMN.center(bst_damage_length),
+                DAMAGE_COLUMN.center(damage_length),
+                POKEMON_COLUMN.center(pokemon_length),
+            )
         )
+    )
+    print("=" * full_width)
+
+    for def_compl, pokemon_str in zip(defense_compl, pokemon_strings):
+        typing_str = "/".join(ty.upper() for ty in def_compl.typing)
         print(
-            f"{typing_str} {def_compl.recv_bst_damage_total:.1f} {def_compl.recv_damage_total:.1f} {pokemon_str}"
+            f"{typing_str:{typing_name_length}} {def_compl.recv_bst_damage_total:{bst_damage_length}.1f} {def_compl.recv_damage_total:{damage_length}.1f} {pokemon_str}"
         )
