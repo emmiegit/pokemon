@@ -39,7 +39,10 @@ PokemonByType = dict[str, list[PokemonInfo]]
 TypeEffectivenessMatrix = dict[tuple[str, str], TypeEffectiveness]
 
 
-def get_pokemon_types(pokemon: PokemonInfo, game: GameInfo) -> list[TypeSpecReference]:
+def get_pokemon_types(
+    pokemon: PokemonInfo,
+    game: GameInfo,
+) -> list[TypeSpecReference]:
     logger.debug("Getting latest Pokémon types for %s", pokemon["name"])
 
     types = pokemon["types"]
@@ -77,14 +80,20 @@ def fetch_all_types(game: GameInfo) -> list[TypeInfo]:
     return types
 
 
-def type_in_spec_list(type_name: str, type_specs: Iterable[SpecReference]) -> bool:
+def type_in_spec_list(
+    type_name: str,
+    type_specs: Iterable[SpecReference],
+) -> bool:
     for type_spec in type_specs:
         if type_spec["name"] == type_name:
             return True
     return False
 
 
-def get_type_damage_relations(p_type: TypeInfo, game: GameInfo) -> DamageRelationInfo:
+def get_type_damage_relations(
+    p_type: TypeInfo,
+    game: GameInfo,
+) -> DamageRelationInfo:
     logger.debug("Getting latest Pokémon type damage relations for %s", p_type["name"])
 
     # See get_pokemon_types() for logic
@@ -106,7 +115,8 @@ def get_type_damage_relations(p_type: TypeInfo, game: GameInfo) -> DamageRelatio
 
 
 def get_type_damage_matrix(
-    all_types: list[TypeInfo], game: GameInfo
+    all_types: list[TypeInfo],
+    game: GameInfo,
 ) -> TypeEffectivenessMatrix:
     matrix: TypeEffectivenessMatrix = {}
     for attacking_type in all_types:
