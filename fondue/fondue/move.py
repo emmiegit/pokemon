@@ -165,5 +165,5 @@ def compile_moves_by_type(
         )
         for move_type, moves in moves_by_type.items()
     ]
-    stats_by_type.sort(key=lambda stats: stats.damage_total, reverse=True)
+    stats_by_type.sort(key=lambda compl: compl.bst_damage_total, reverse=True)
     return stats_by_type
