@@ -40,6 +40,19 @@ if __name__ == "__main__":
         help="Only consider fully-evolved Pokémon",
     )
     argparser.add_argument(
+        "-L",
+        "--allow-defending-legendaries",
+        action="store_true",
+        help="Consider legendaries/mystical Pokémon in defensive typing analysis",
+    )
+    argparser.add_argument(
+        "-b",
+        "--max-defending-bst",
+        type=int,
+        default=599,
+        help="Only consider Pokémon with BSTs lower than this value in defensive typing analysis (0 for no limit)",
+    )
+    argparser.add_argument(
         "-v",
         "--verbose",
         default=0,
@@ -51,6 +64,11 @@ if __name__ == "__main__":
         help="What game/version group to run the calculations for",
     )
     args = argparser.parse_args()
+
+    ignore_defending_legendaries = not args.allow_defending_legendaries
+    ignore_defending_bst_above = (
+        None if args.max_defending_bst <= 0 else args.max_defending_bst
+    )
 
     # Set up logger (if enabled)
     logger = logging.getLogger(__package__)
@@ -82,7 +100,13 @@ if __name__ == "__main__":
 
     logger.info("Fetching Pokémon type information")
     all_types = fetch_all_types(game)
-    pokemon_by_typings = group_pokemon_by_typings(all_pokemon, game)
+    pokemon_by_typings = group_pokemon_by_typings(
+        all_pokemon,
+        game,
+        ignore_defending_legendaries=ignore_defending_legendaries,
+        ignore_defending_bst_above=ignore_defending_bst_above,
+        stats_by_name=pokemon_stats,
+    )
     type_matrix = get_type_damage_matrix(all_types, game)
 
     logger.info("Calculating damage for all moves in %s", game)
@@ -151,5 +175,4 @@ if __name__ == "__main__":
     print()
     print(DEFENSE_TITLE.center(full_width))
     print()
-    breakpoint()
     print("TODO")
