@@ -8,7 +8,7 @@ from .api_types import MoveInfo
 from .crit import get_crit_chance
 from .game import GameInfo
 
-TARGET_TYPE_OPPONENT = frozenset(
+TARGET_TYPE_OPPONENT: Final[frozenset[str]] = frozenset(
     {
         "specific-move",
         "opponents-field",
