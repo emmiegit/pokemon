@@ -74,22 +74,32 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
 
     if meta is None:
         # Not valid for our purposes
+        # All of those weird "shadow" moves have no metadata component
         logger.debug("Skipping move, no metadata")
         return None
 
     if move["target"]["name"] not in TARGET_TYPE_OPPONENT:
+        # Move doesn't hit opponents (e.g. Roost, Helping Hand)
         logger.debug("Skipping move, doesn't target opponents")
         return None
 
     if move_is_hm(move, game):
+        # Move is an HM, not valid in Kaizo Ironmon (e.g. Rock Climb)
         logger.debug("Skipping move, is HM")
         return None
 
     if power is None:
+        # Move has no power, doesn't deal normal damage
+        #
+        # Flat damage like Dragon Rage falls under here (which isn't affected by typing anyways)
+        # or status moves like Will-o-Wisp or Spikes.
         logger.debug("Skipping move, status only")
         return None
 
     if power < 50:
+        # Heuristic: Ignore weak moves, since we want to determine risk in Ironmon
+        # Weak moves are (obviously) generally not doing a lot of damage and not
+        # where the risk of a game over stems from
         logger.debug("Skipping move, BP %d < 50", power)
         return None
 
@@ -99,7 +109,7 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
     # Factor in accuracy
     accuracy = move["accuracy"]
     if accuracy is not None:
-        # None means 'always hits'
+        # None means 'always hits' (e.g. Aura Sphere)
         damage *= accuracy / 100
 
     # Critical hit chance and damage
