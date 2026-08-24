@@ -201,8 +201,8 @@ def group_pokemon_by_typings(
     all_pokemon: Iterable[PokemonInfo],
     game: GameInfo,
     *,
-    ignore_defending_legendaries: bool,
-    ignore_defending_bst_above: int | None,
+    exclude_defending_legendaries: bool,
+    exclude_defending_bst_above: int | None,
     stats_by_name: Mapping[str, CurrentPokemonStats] | None = None,
 ) -> PokemonByTypings:
     typings = defaultdict(list)
@@ -210,7 +210,7 @@ def group_pokemon_by_typings(
         pokemon_name = pokemon["name"]
 
         # if set, skip legendaries/mystical mons
-        if ignore_defending_legendaries:
+        if exclude_defending_legendaries:
             species = fetch_pokemon_species(pokemon["species"]["url"])
             if species["is_legendary"] or species["is_mythical"]:
                 logger.debug(
@@ -220,19 +220,19 @@ def group_pokemon_by_typings(
                 continue
 
         # if set, skip mons with BST too high
-        if ignore_defending_bst_above is not None:
+        if exclude_defending_bst_above is not None:
             if stats_by_name is None:
                 raise RuntimeError(
                     "Cannot filter by BST without passing BST information"
                 )
 
             bst = get_base_stat_total(stats_by_name[pokemon_name])
-            if bst > ignore_defending_bst_above:
+            if bst > exclude_defending_bst_above:
                 logger.debug(
                     "Skipping %s in defensive analysis, BST %d > %d",
                     pokemon_name,
                     bst,
-                    ignore_defending_bst_above,
+                    exclude_defending_bst_above,
                 )
                 continue
 

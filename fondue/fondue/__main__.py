@@ -171,8 +171,8 @@ if __name__ == "__main__":
     )
     args = argparser.parse_args()
 
-    ignore_defending_legendaries = not args.allow_defending_legendaries
-    ignore_defending_bst_above = (
+    exclude_defending_legendaries = not args.allow_defending_legendaries
+    exclude_defending_bst_above = (
         None if args.max_defending_bst <= 0 else args.max_defending_bst
     )
 
@@ -209,8 +209,8 @@ if __name__ == "__main__":
     pokemon_by_typings = group_pokemon_by_typings(
         all_pokemon,
         game,
-        ignore_defending_legendaries=ignore_defending_legendaries,
-        ignore_defending_bst_above=ignore_defending_bst_above,
+        exclude_defending_legendaries=exclude_defending_legendaries,
+        exclude_defending_bst_above=exclude_defending_bst_above,
         stats_by_name=pokemon_stats,
     )
     type_matrix = get_type_damage_matrix(all_types, game)
