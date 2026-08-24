@@ -107,7 +107,10 @@ def calculate_damage(move: MoveInfo, game: GameInfo) -> float | None:
     return damage
 
 
-def calculate_damage_by_type(game: GameInfo, exclude_shadow: bool = True) -> MoveDamageByType:
+def calculate_damage_by_type(
+    game: GameInfo,
+    exclude_shadow: bool = True,
+) -> MoveDamageByType:
     moves_by_type: MoveDamageByType = defaultdict(dict)
     for move_spec in game.all_moves():
         move = fetch_move_info(move_spec["url"])
