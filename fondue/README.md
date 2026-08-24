@@ -16,6 +16,8 @@ python -m fondue [game]
 
 Give the name of the game / version group, with some abbreviations accepted. For instance, `platinum` for Platinum or `hgss` for HeartGold/SoulSilver.
 
+Use `--help` to see all valid arguments for this utility.
+
 ### Development
 
 For formatting, linting, etc.:
