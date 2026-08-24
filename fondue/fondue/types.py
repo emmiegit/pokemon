@@ -53,7 +53,7 @@ class DefensiveCompilationForType(NamedTuple):
     typing: PokemonTyping
     recv_damage_total: float
     recv_bst_damage_total: float
-    pokemon_count: int
+    pokemon_list: Sequence[PokemonInfo]
 
 
 def get_pokemon_types(
@@ -260,7 +260,7 @@ def calculate_defensive_scores_by_pokemon_typings(
                 typing=defending_typing,
                 recv_damage_total=damage_total,
                 recv_bst_damage_total=bst_damage_total,
-                pokemon_count=len(pokemon_list),
+                pokemon_list=pokemon_list,
             )
         )
     defense_by_type.sort(key=lambda compl: compl.recv_bst_damage_total)
