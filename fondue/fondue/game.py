@@ -38,8 +38,10 @@ def _map_version_group_name(value: str) -> str:
             return "platinum"
         case "hgss" | "heartgold" | "soulsilver":
             return "heartgold-soulsilver"
-        case "bw" | "black" | "white":
+        case "bw" | "bw1" | "black" | "white":
             return "black-white"
+        case "bw2" | "black2" | "black-2" | "white2" | "white-2":
+            return "black-2-white-2"
         case "xy" | "x" | "y":
             return "x-y"
         case (
