@@ -203,11 +203,18 @@ def group_pokemon_by_typings(
     *,
     exclude_defending_legendaries: bool,
     exclude_defending_bst_above: int | None,
+    exclude_shedinja: bool = True,
     stats_by_name: Mapping[str, CurrentPokemonStats] | None = None,
 ) -> PokemonByTypings:
     typings = defaultdict(list)
     for pokemon in all_pokemon:
         pokemon_name = pokemon["name"]
+
+        # if set, skip shedinja
+        # not a relevant mon for considering defensive Ironmon typing
+        if exclude_shedinja and pokemon_name == "shedinja":
+            logger.debug("Skipping Shedinja")
+            continue
 
         # if set, skip legendaries/mystical mons
         if exclude_defending_legendaries:
