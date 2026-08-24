@@ -11,7 +11,7 @@ Description of methodology to follow.
 ### Execution
 
 ```sh
-python -m fondue_score [game]
+python -m fondue [game]
 ```
 
 Give the name of the game / version group, with some abbreviations accepted. For instance, `platinum` for Platinum or `hgss` for HeartGold/SoulSilver.
@@ -21,7 +21,7 @@ Give the name of the game / version group, with some abbreviations accepted. For
 For formatting, linting, etc.:
 
 ```sh
-$ ruff format fondue_score
-$ ruff check fondue_score
+$ ruff format fondue
+$ ruff check fondue
 $ mypy fondue_score
 ```
