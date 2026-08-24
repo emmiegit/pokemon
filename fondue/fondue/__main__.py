@@ -34,7 +34,10 @@ SCORE_COLUMN: Final[str] = "SCORE"
 DAMAGE_COLUMN: Final[str] = "DAMAGE"
 MOVE_COLUMN: Final[str] = "MOVES"
 BST_MEAN_COLUMN: Final[str] = "AVG-BST"
-POKEMON_COLUMN: Final[str] = "PKMN"
+POKEMON_SHORT_COLUMN: Final[str] = "PKMN"
+
+TYPING_COLUMN: Final[str] = "TYPING"
+POKEMON_FULL_COLUMN: Final[str] = "POKÉMON"
 
 SAMPLE_POKEMON_FOR_TYPE: Final[int] = 3
 
@@ -52,7 +55,7 @@ def print_offense_results(damage_compl: Sequence[MoveCompilationForType]):
     mean_bst_digits = digits(max(mean_bst_by_type.values())) + 2
     mean_bst_length = max(len(BST_MEAN_COLUMN), mean_bst_digits)
     pokemon_count_digits = digits(max(len(bsts) for bsts in bsts_by_type.values())) + 1
-    pokemon_count_length = max(len(POKEMON_COLUMN), pokemon_count_digits)
+    pokemon_count_length = max(len(POKEMON_SHORT_COLUMN), pokemon_count_digits)
 
     full_width = (
         type_name_length
@@ -74,7 +77,7 @@ def print_offense_results(damage_compl: Sequence[MoveCompilationForType]):
                 DAMAGE_COLUMN.center(damage_length),
                 MOVE_COLUMN.center(move_count_length),
                 BST_MEAN_COLUMN.center(mean_bst_length),
-                POKEMON_COLUMN.center(pokemon_count_length),
+                POKEMON_SHORT_COLUMN.center(pokemon_count_length),
             )
         )
     )
@@ -118,10 +121,10 @@ def print_defense_results(defense_compl: Sequence[DefensiveCompilationForType]):
     print(
         " ".join(
             (
-                TYPE_COLUMN.center(typing_name_length),
+                TYPING_COLUMN.center(typing_name_length),
                 SCORE_COLUMN.center(bst_damage_length),
                 DAMAGE_COLUMN.center(damage_length),
-                POKEMON_COLUMN.center(pokemon_length),
+                POKEMON_FULL_COLUMN.center(pokemon_length),
             )
         )
     )
