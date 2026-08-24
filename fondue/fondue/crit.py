@@ -40,7 +40,7 @@ def gen3to5_crit_chance(crit_rate: int) -> float:
             return 1 / 4
         case 3:
             return 1 / 3
-        case 4:
+        case 4 | 5 | 6:
             return 1 / 2
         case _:
             raise ValueError(crit_rate)
