@@ -23,5 +23,5 @@ For formatting, linting, etc.:
 ```sh
 $ ruff format fondue
 $ ruff check fondue
-$ mypy fondue_score
+$ mypy fondue
 ```
