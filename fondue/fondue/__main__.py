@@ -166,10 +166,10 @@ if __name__ == "__main__":
     )
     print("=" * full_width)
 
-    for compl in damage_compl:
-        type_name = compl.type.upper()
+    for dmg_compl in damage_compl:
+        type_name = dmg_compl.type.upper()
         print(
-            f"{type_name:{type_name_length}} {compl.bst_damage_total:{bst_damage_length}.1f} {compl.damage_total:{damage_length}.2f} {compl.move_count:{move_count_length}} {compl.mean_bst:{mean_bst_length}.1f} {compl.pokemon_count:{pokemon_count_length}}"
+            f"{type_name:{type_name_length}} {dmg_compl.bst_damage_total:{bst_damage_length}.1f} {dmg_compl.damage_total:{damage_length}.2f} {dmg_compl.move_count:{move_count_length}} {dmg_compl.mean_bst:{mean_bst_length}.1f} {dmg_compl.pokemon_count:{pokemon_count_length}}"
         )
 
     print()
