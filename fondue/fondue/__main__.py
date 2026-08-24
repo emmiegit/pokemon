@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     logger.info("Fetching Pokémon type information")
     all_types = fetch_all_types(game)
-    all_pokemon_typings = get_unique_pokemon_typings(all_pokemon)
+    all_pokemon_typings = get_unique_pokemon_typings(all_pokemon, game)
     type_matrix = get_type_damage_matrix(all_types, game)
 
     logger.info("Organizing Pokémon by type and stats")

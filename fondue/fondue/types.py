@@ -186,15 +186,14 @@ def group_pokemon_by_type(
     return types
 
 
-def get_unique_pokemon_typings(all_pokemon: Iterable[PokemonInfo]) -> AllPokemonTypings:
-    # {"types": [{"type": {"name": <name>}}]}
-    def convert_types(pkmn: PokemonInfo) -> tuple[str, ...]:
-        return tuple(ty["type"]["name"] for ty in pkmn["types"])
-
-    # we could do frozenset() if we didn't want counts
+def get_unique_pokemon_typings(
+    all_pokemon: Iterable[PokemonInfo],
+    game: GameInfo,
+) -> AllPokemonTypings:
     typings: MutableMapping[PokemonTyping, int] = defaultdict(int)
     for pokemon in all_pokemon:
-        typings[convert_types(pokemon)] += 1
+        typing = tuple(ty["type"]["name"] for ty in get_pokemon_types(pokemon, game))
+        typings[typing] += 1
     return typings
 
 
