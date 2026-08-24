@@ -181,7 +181,7 @@ if __name__ == "__main__":
     for def_compl in defense_compl:
         pokemon_list = def_compl.pokemon_list
         if len(pokemon_list) > SAMPLE_POKEMON_FOR_TYPE:
-            pokemon_list = def_compl.pokemon_list[:SAMPLE_POKEMON_FOR_TYPE]
+            pokemon_list = list(def_compl.pokemon_list[:SAMPLE_POKEMON_FOR_TYPE])
             pokemon_list.append("...")
 
         pokemon_strings.append(", ".join(name.upper() for name in pokemon_list))
