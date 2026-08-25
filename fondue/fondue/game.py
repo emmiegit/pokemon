@@ -30,7 +30,7 @@ def _map_version_group_name(value: str) -> str:
             return "ruby-sapphire"
         case "e":
             return "emerald"
-        case "firered" | "fire-red" | "fr" | "leafgreen" | "leaf-green" | "lg":
+        case "frlg" | "firered" | "fire-red" | "fr" | "leafgreen" | "leaf-green" | "lg":
             return "firered-leafgreen"
         case "dp" | "diamond" | "pearl":
             return "diamond-pearl"
